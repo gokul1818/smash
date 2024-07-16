@@ -19,12 +19,12 @@ const Login: React.FC<LoginProps> = ({ hideNavBar }) => {
 
   return (
     <div className="text-center min-h-screen flex flex-col justify-center items-center bg-red">
-      {!hideNavBar && (
+      {/* {hideNavBar && (
+      )} */}
         <header className="bg-blue-500 p-6 w-full text-center">
           <img src={player} alt="login-logo" className="login-logo" />
           <h1 className="smash">Smash Badminton</h1>
         </header>
-      )}
 
       <div className="mt-8 w-full max-w-md">
         <TextInput

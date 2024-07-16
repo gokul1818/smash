@@ -1,10 +1,11 @@
-.smash{
-    /* font-family: "Mako", sans-serif; */
-    font-family: "Audiowide", sans-serif;
-    font-size: 40px;
+
+.smash {
+  font-size: 40px;
+  font-family: "Audiowide", sans-serif;
+
 }
 
-.login-logo{
-    height: 100%;
-    width: 100%;
+.login-logo {
+  height: 100%;
+  width: 100%;
 }
