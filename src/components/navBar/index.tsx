@@ -1,19 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import homeIcon from "../../assets/images/home.png";
+import trackerIcon from "../../assets/images/tracker.png";
+import profileIcon from "../../assets/images/profile.png";
+import "./styles.css";
 
 const NavBar: React.FC = () => {
   return (
-    <nav>
-      <ul>
-        <li>
-          <Link to="/home">Home</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/contact">Contact</Link>
-        </li>
+    <nav className="navbar">
+      <ul className="navbar-list">
+          <Link to="/home">
+            <img src={homeIcon} alt="Home" className="navbar-icon" />
+          </Link>
+          <Link to="/about">
+            <img src={trackerIcon} alt="Tracker" className="navbar-icon" />
+          </Link>
+          <Link to="/contact">
+            <img src={profileIcon} alt="Profile" className="navbar-icon" />
+          </Link>
       </ul>
     </nav>
   );
