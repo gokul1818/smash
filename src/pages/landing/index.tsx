@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/buttonComponent";
-
+import "./styles.css"
 interface LandingProps {
   hideNavBar?: boolean;
 }
 
-const Landing: React.FC<LandingProps> = ({ hideNavBar }) => {
+const Landing: React.FC<LandingProps> = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -14,19 +14,21 @@ const Landing: React.FC<LandingProps> = ({ hideNavBar }) => {
   };
 
   return (
-    <div className="text-center min-h-screen flex flex-col justify-center items-center bg-gray-100">
-      {!hideNavBar && (
-        <header className="bg-blue-500 p-6 w-full text-center">
-          <h1 className="text-4xl font-bold text-black">
-            Welcome to Smash Badminton Login
-          </h1>
-        </header>
-      )}
-
+    <div className="landing-container p-3">
       <Button
-        label="Go to Landing Page"
+        label="Start Match"
         onClick={handleNavigate}
-        className="mt-4 bg-gray-100"
+        className=""
+        primaryBtn
+      />
+      <p className="or-text">
+        OR
+      </p>
+      <Button
+        label="Just Login"
+        onClick={handleNavigate}
+        className=""
+        primaryBtn
       />
     </div>
   );

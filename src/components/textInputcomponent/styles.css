@@ -1,0 +1,19 @@
+.primary-textinput-Box {
+  align-items: center;
+  justify-content: flex-start;
+  height: 50px;
+  width: 100%;
+  border: 1px solid grey;
+  outline: none;
+  border-radius: 8px;
+  padding: 1px 10px;
+  font-size: 16px;  
+  font-weight: 500;
+  background-color: #ffffff6a;
+  font-family: "Ubuntu", sans-serif;
+}
+.inputBox-label{
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}

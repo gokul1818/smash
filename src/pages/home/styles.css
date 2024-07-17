@@ -1,0 +1,122 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom, #021531, #0e0e0e);
+}
+.akaya-style {
+  font-family: "Akaya Telivigala", system-ui;
+  font-size: 22px;
+}
+
+.streaks-label {
+  position: absolute;
+  right: 36px;
+  top: 40px;
+  font-family: "audiowide", system-ui;
+  margin: 0;
+  font-size: 10px;
+  text-align: center;
+}
+
+.streaks-label-date {
+  font-size: 14px;
+}
+
+.home-start-match-card {
+  width: 100%;
+  height: 100px;
+  border-radius: 15px;
+  background-color: #0e0e0ec9;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.start-match-card-label {
+  font-family: "Akaya Telivigala", system-ui;
+  font-size: 18px;
+}
+.avaliable-players-container {
+  display: flex;
+  overflow: scroll;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+.avaliable-players-card-pro {
+  background-color: #f1dc83;
+  width: 100%;
+  min-width: 100%;
+  height: 200px;
+  margin-right: 20px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 3px solid #fdb836;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.avaliable-players-card-average {
+  background-color: #b0b8fd;
+  width: 100%;
+  min-width: 100%;
+  height: 200px;
+  margin-right: 20px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 3px solid #0012b5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.avaliable-players-card-beginner {
+  background-color: #bcc1cb;
+  width: 100%;
+  min-width: 100%;
+  height: 200px;
+  margin-right: 20px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 3px solid #808ca5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.current-match-container {
+  display: flex;
+  overflow: scroll;
+  width: 100%;
+  flex-wrap: nowrap;
+  background: #000000;
+  height: 300px;
+  width: 100%;
+  padding: 20px 0px;
+  border-radius: 20px;
+}
+.palyers-match-card {
+  width: auto;
+  margin: 0px 20px;
+  min-width: 90%;
+  height: auto;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.player-profile-img1 {
+  position: absolute;
+  left: 60px;
+}
+.player-profile-img {
+  position: absolute;
+  left: 240px;
+}
+.profile-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.palyers-match-btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  height: 259px;
+}

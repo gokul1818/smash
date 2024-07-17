@@ -1,0 +1,15 @@
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #f9f9f9, #bac6d7);
+}
+
+.or-text {
+  font-size: 30px;
+  font-family: "Audiowide", sans-serif;
+  text-align: center;
+  margin: 10px;
+}

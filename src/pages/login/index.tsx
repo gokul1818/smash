@@ -18,36 +18,38 @@ const Login: React.FC<LoginProps> = ({ hideNavBar }) => {
   };
 
   return (
-    <div className="text-center min-h-screen flex flex-col justify-center items-center bg-red">
-      {/* {hideNavBar && (
-      )} */}
-        <header className="bg-blue-500 p-6 w-full text-center">
-          <img src={player} alt="login-logo" className="login-logo" />
-          <h1 className="smash">Smash Badminton</h1>
-        </header>
+    <div className="login-container p-3 ">
+      <div className="mb-4">
 
-      <div className="mt-8 w-full max-w-md">
+        <img src={player} alt="login-logo" className="login-logo" />
+        <h1 className="smash w-100 px-4 ">Smash Badminton</h1>
+      </div>
+
+
+      <div className= "w-100 px-3">
         <TextInput
           type="phone"
           value={mobile}
+          inputLabel="phone number"
           onChange={setMobile}
           placeholder="Enter your mobile number"
-          className="mb-4 w-full"
+          className="mb-2 "
         />
         <TextInput
           type="password"
           value={password}
+          inputLabel="password"
           onChange={setPassword}
           placeholder="Enter your password"
-          className="mb-4 w-full"
+          className="mb-2 "
         />
       </div>
       <Button
         label="Login"
         onClick={handleNavigate}
-        className="mt-4"
-        height="40px"
-        width="120px"
+        primaryBtn
+        className={"mt-2"}
+     
       />
     </div>
   );
