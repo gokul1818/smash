@@ -160,8 +160,8 @@ const Home: React.FC = () => {
         }
       ],
       start: true,
-      ATeampoints: 0,
-      BTeamPoints: 2,
+      ATeampoints: 10,
+      BTeamPoints: 12,
       Awinner: true,
       Bwinner: false
     },
@@ -258,11 +258,22 @@ const Home: React.FC = () => {
                 width='120px'
               /> :
                 <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                  <p className='white-color'>POINTS</p>
+                  <p className='white-color akaya-style fs-20 mb-0'>POINTS</p>
                   <div className='d-flex justify-content-center w-100'  >
+                    <Button
+                      label="WON"
+                      height='30px'
+                      width='80px'
+                    />
+                    <p className='white-color fs-22 mb-0 ms-4'>{match.ATeampoints}</p>
+                    <p className='white-color  fs-22 mx-2'>:</p>
 
-                    <p className='white-color'>POINTS</p>
-                    <p className='white-color'>POINTS</p>
+                    <p className='white-color fs-22 mb-0 me-4'>{match.BTeamPoints}</p>
+                    <Button
+                      label="WON"
+                      height='30px'
+                      width='80px'
+                    />
                   </div>
 
 
