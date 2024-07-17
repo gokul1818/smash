@@ -1,10 +1,20 @@
-.smash{
-    /* font-family: "Mako", sans-serif; */
-    font-family: "Audiowide", sans-serif;
-    font-size: 40px;
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #f9f9f9, #bac6d7);
 }
 
-.login-logo{
-    height: 100%;
-    width: 100%;
+.smash {
+  font-size: 40px;
+  font-family: "Audiowide", sans-serif;
+  text-align: center;
+}
+
+.login-logo {
+  height: 300px;
+  width: 100%;
+  object-fit: contain;
 }

@@ -7,8 +7,7 @@ import "./styles.css";
 
 const NavBar: React.FC = () => {
   return (
-    <nav className="navbar">
-      <ul className="navbar-list">
+      <div className="navbar-list">
           <Link to="/home">
             <img src={homeIcon} alt="Home" className="navbar-icon" />
           </Link>
@@ -18,8 +17,7 @@ const NavBar: React.FC = () => {
           <Link to="/contact">
             <img src={profileIcon} alt="Profile" className="navbar-icon" />
           </Link>
-      </ul>
-    </nav>
+      </div>
   );
 };
 

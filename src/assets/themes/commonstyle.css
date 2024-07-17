@@ -1,0 +1,54 @@
+/* text color */
+.white-color {
+  color: #ffffff;
+}
+.black-color {
+  color: #000000;
+}
+.persianGreen-color {
+  color: #0da19c;
+}
+.irishGreen-color {
+  color: #028c36;
+}
+.primarygrey-color {
+  color: #d2d2d2;
+}
+.E1-black-color {
+  color: #1e1e1e;
+}
+
+/* background color */
+.bg-white-color {
+  background-color: #ffffff;
+}
+
+.bg-black-color {
+  background-color: #000000;
+}
+.bg-persianGreen-color {
+  background-color: #0da19c;
+}
+.bg-irishGreen-color {
+  background-color: #028c36;
+}
+.bg-primarygrey-color {
+  background-color: #d2d2d2;
+}
+.bg-E1-black-color {
+  background-color: #1e1e1e;
+}
+
+/*  font size */
+.fs-18 {
+  font-size: 18px;
+}
+.fs-20 {
+  font-size: 20px;
+}
+.fs-22 {
+  font-size: 22px;
+}
+.fs-24{
+  font-size: 24px;
+}

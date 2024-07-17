@@ -6,7 +6,7 @@ import Profile from "./pages/profile";
 import Tracker from "./pages/tracker";
 import Login from "./pages/login";
 import Landing from "./pages/landing";
-
+import "./assets/themes/commonstyle.css"
 const App: React.FC = () => {
   return (
     <Router>
