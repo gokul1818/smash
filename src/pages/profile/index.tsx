@@ -1,6 +1,4 @@
 import React from "react";
-import beginnerBadge from "../../assets/images/beginerBadge.svg";
-import streaks from "../../assets/images/streaksGrp.svg";
 import "./styles.css";
 
 import Button from "../../components/buttonComponent";
