@@ -1,0 +1,10 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom, #0e0e0e, #021531);
+}
+.profile-label {
+    font-family: "Akaya Telivigala", system-ui;
+    font-size: 18px;
+  }
