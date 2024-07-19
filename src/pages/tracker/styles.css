@@ -23,17 +23,17 @@
 .rank1-profile-img {
   position: absolute;
   top: 55px;
-  left: 41%;
+  left: 39%;
 }
 .rank2-profile-img {
   position: absolute;
   top: 85px;
-  left: 10%;
+  left: 5%;
 }
 .rank3-profile-img {
   position: absolute;
   top: 115px;
-  right: 12%;
+  right: 8%;
 }
 .top-palyer-list-card {
   width: 100%;
@@ -53,7 +53,7 @@
   min-height: 500px;
   position: absolute;
   width: 100%;
-  top: 50%;
+  top: 70%;
   padding: 10px;
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
