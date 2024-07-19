@@ -1,0 +1,73 @@
+.leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #021531, #0e0e0e);
+}
+.akaya-style {
+  font-family: "Akaya Telivigala", system-ui;
+  font-size: 22px;
+}
+.podium-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 350px;
+  transition: opacity 2.3s ease;
+  z-index: 4;
+}
+
+.rank1-profile-img {
+  position: absolute;
+  top: 55px;
+  left: 41%;
+}
+.rank2-profile-img {
+  position: absolute;
+  top: 85px;
+  left: 10%;
+}
+.rank3-profile-img {
+  position: absolute;
+  top: 115px;
+  right: 12%;
+}
+.top-palyer-list-card {
+  width: 100%;
+  height: 80px;
+  background-color: #d1d1d1;
+  border-radius: 50px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.top-player-list {
+  background-color: #fefefe;
+  height: auto;
+  min-height: 500px;
+  width: 100%;
+  margin-top: 150%;
+  padding: 10px;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  z-index: 10;
+}
+
+.top-palyer-list-profile-img {
+  width: 70px;
+  height: 70px;
+}
+.first-half {
+  opacity: 1;
+  position: fixed;
+  transition: opacity 1.5s ease;
+}
+
+.first-half.fade-in {
+  opacity:0.2;
+}

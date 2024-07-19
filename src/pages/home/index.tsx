@@ -4,9 +4,10 @@ import proBadge from "../../assets/images/proBadge.svg";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import court from "../../assets/images/court.svg";
-
+import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import "./styles.css";
+import dummyImg from "../../assets/images/dummyImg.svg";
 
 import Button from '../../components/buttonComponent';
 
@@ -15,35 +16,35 @@ const Home: React.FC = () => {
   const avaliablePlayerData = [
     {
       name: "rocky boy",
-      profileimg: "img",
+      profileimg: dummyImg,
       level: "pro",
       rank: 2,
       score: 100
     },
     {
       name: "rocky boy",
-      profileimg: "img",
+      profileimg: dummyImg,
       level: "average",
       rank: 2,
       score: 100
     },
     {
       name: "rocky boy",
-      profileimg: "img",
+      profileimg: dummyImg,
       level: "beginner",
       rank: 2,
       score: 100
     },
     {
       name: "rocky boy",
-      profileimg: "img",
+      profileimg: dummyImg,
       level: "pro",
       rank: 2,
       score: 100
     },
     {
       name: "rocky boy",
-      profileimg: "img",
+      profileimg: dummyImg,
       level: "average",
       rank: 2,
       score: 100
@@ -53,115 +54,47 @@ const Home: React.FC = () => {
     {
       court: 1,
       players: [
-        {
-          name: "rocky boy",
-          profileimg: proBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: averageBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: averageBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: beginnerBadge,
-          level: "beginner",
-          rank: 2,
-          score: 100
-        }
+
       ],
       start: false,
-      ATeampoints: 10,
-      BTeamPoints: 22,
       Awinner: false,
       Bwinner: true
 
     },
+
     {
       court: 1,
       players: [
         {
           name: "rocky boy",
-          profileimg: averageBadge,
+          profileimg: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: averageBadge,
+          profileimg: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: proBadge,
+          profileimg: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: beginnerBadge,
+          profileimg: dummyImg,
           level: "beginner",
           rank: 2,
           score: 100
         }
       ],
       start: true,
-      ATeampoints: 0,
-      BTeamPoints: 2,
-      Awinner: true,
-      Bwinner: false
-    },
-    {
-      court: 1,
-      players: [
-        {
-          name: "rocky boy",
-          profileimg: averageBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: averageBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: proBadge,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: beginnerBadge,
-          level: "beginner",
-          rank: 2,
-          score: 100
-        }
-      ],
-      start: true,
-      ATeampoints: 10,
-      BTeamPoints: 12,
       Awinner: true,
       Bwinner: false
     },
@@ -195,7 +128,6 @@ const Home: React.FC = () => {
           <p className='start-match-card-label mb-0 primarygrey-color'>Now your not in match </p>
           <Button
             label="Start Match"
-            // onClick={handleNavigate}
             height='30px'
             width='120px'
             secondaryBtn={true}
@@ -212,12 +144,12 @@ const Home: React.FC = () => {
           <div className={playersData.level === "pro" ? `avaliable-players-card-pro` :
             playersData.level === "average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
           } key={index}>
-            <div className='w-50'>
-
+            <div className='w-50 position-relative'>
               <img src={playersData.level === "pro" ? proBadge : playersData.level === "average" ? averageBadge : beginnerBadge} alt="badge" />
+              <img src={playersData.profileimg} className='avaliable-profile-car-img' />
             </div>
             <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
-              <p className='akaya-style fs-24 text-uppercase fs-bold black-color'>{playersData.name}</p>
+              <p className='akaya-style fs-24 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
               <div className='d-flex w-100'>
                 <p className='w-50 akaya-style fs-18 mb-0' >{"Rank :"}</p>
                 <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank}</p>
@@ -237,38 +169,44 @@ const Home: React.FC = () => {
       <p className='akaya-style white-color text-center  my-3'>
         Current Match
       </p>
-      <div className='current-match-container'>
+      <div className='current-match-container mb-5'>
         {currentMatch.map((match, index) => (
           <div className={"palyers-match-card"} key={index}
             style={{ backgroundImage: `url(${court})` }}>
-            {match.players.slice(0, 2).map((x, index) => (
+
+            {Boolean(match.start) ? match.players.slice(0, 2).map((x, index) => (
               <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
                 <img src={x.profileimg} className='profile-img' alt='img' />
               </div>
-            ))}
-            {match.players.slice(2, 4).map((x, index) => (
-              <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
-                <img src={x.profileimg} className='profile-img' alt="img" />
-              </div>
-            ))}
+            )) :
+              Array.of(1, 2).map((x, index) => (
+                <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                  <img src={QuestionMark} className='profile-img' alt='img' />
+                </div>
+              ))
+            }
+            {Boolean(match.start) ?
+              match.players.slice(2, 4).map((x, index) => (
+                <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
+                  <img src={x.profileimg} className='profile-img' alt="img" />
+                </div>
+              )) :
+              Array.of(3, 4).map((x, index) => (
+                <div className='player-profile-img1' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                  <img src={QuestionMark} className='profile-img' alt='img' />
+                </div>
+              ))}
+
             <div className='palyers-match-btn-container'>
-              {!match.start ? <Button
-                label="Start Match"
-                height='30px'
-                width='120px'
-              /> :
+              {match.start ?
                 <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                  <p className='white-color akaya-style fs-20 mb-0'>POINTS</p>
-                  <div className='d-flex justify-content-center w-100'  >
+                  <div className='d-flex justify-content-around w-100'  >
                     <Button
                       label="WON"
                       height='30px'
                       width='80px'
                     />
-                    <p className='white-color fs-22 mb-0 ms-4'>{match.ATeampoints}</p>
-                    <p className='white-color  fs-22 mx-2'>:</p>
 
-                    <p className='white-color fs-22 mb-0 me-4'>{match.BTeamPoints}</p>
                     <Button
                       label="WON"
                       height='30px'
@@ -278,6 +216,13 @@ const Home: React.FC = () => {
 
 
                 </div>
+                :
+                <Button
+                  label="Start Match"
+                  height='30px'
+                  width='120px'
+                />
+
               }
             </div>
 

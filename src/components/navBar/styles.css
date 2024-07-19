@@ -1,5 +1,5 @@
 .navbar-list {
-  background-color: #d2d2d2;
+  background-color: #ffffff;
   padding: 15px 0px;
   position: fixed;
   bottom: 0;
@@ -11,6 +11,7 @@
   align-items: center;
   border-top-right-radius: 25%;
   border-top-left-radius: 25%;
+  z-index: 100;
 }
 
 .navbar-icon {
