@@ -115,3 +115,17 @@
   font-weight: 700;
   font-style: italic;
 }
+
+
+
+.scrollBar-hide {
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.scrollBar-hide::-webkit-scrollbar {
+  width: 0; /* Hide scrollbar for Chrome, Safari, and Edge */
+}
+
+.scrollBar-hide::-webkit-scrollbar-track {
+  background: transparent; /* Optional: track color */
+}

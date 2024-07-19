@@ -145,7 +145,7 @@ const Home: React.FC = () => {
       <p className='akaya-style white-color text-center  my-3'>
         Avaliable Players
       </p>
-      <div className='avaliable-players-container'>
+      <div className='avaliable-players-container scrollBar-hide'>
 
         {avaliablePlayerData.map((playersData, index) => (
           <div className={playersData.level === "pro" ? `avaliable-players-card-pro` :
@@ -176,7 +176,7 @@ const Home: React.FC = () => {
       <p className='akaya-style white-color text-center  my-3'>
         Current Match
       </p>
-      <div className='current-match-container mb-5'>
+      <div className='current-match-container scrollBar-hide mb-5'>
         {currentMatch.map((match, index) => (
           <div className={"palyers-match-card"} key={index}
             style={{ backgroundImage: `url(${court})` }}>

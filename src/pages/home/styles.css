@@ -5,7 +5,6 @@
   background: linear-gradient(to bottom, #021531, #0e0e0e);
 }
 
-
 .streaks-label {
   position: absolute;
   right: 36px;
@@ -36,7 +35,6 @@
 }
 .avaliable-players-container {
   display: flex;
-  overflow: scroll;
   width: 100%;
   flex-wrap: nowrap;
 }
@@ -88,7 +86,6 @@
 }
 .current-match-container {
   display: flex;
-  overflow: scroll;
   width: 100%;
   flex-wrap: nowrap;
   background: #000000;
@@ -100,7 +97,7 @@
 .palyers-match-card {
   width: auto;
   margin: 0px 20px;
-  min-width: 100%;
+  min-width: 345px;
   height: auto;
   background-repeat: no-repeat;
   position: relative;
