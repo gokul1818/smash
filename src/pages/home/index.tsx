@@ -8,7 +8,7 @@ import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import "./styles.css";
 import dummyImg from "../../assets/images/dummyImg.svg";
-
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Button from '../../components/buttonComponent';
 
 const Home: React.FC = () => {
@@ -101,6 +101,13 @@ const Home: React.FC = () => {
 
 
   ]
+  const data = [
+    { name: 'week1', uv: 400, pv: 200 },
+    { name: 'week2', uv: 300, pv: 400 },
+    { name: 'week3', uv: 100, pv: 10 },
+    { name: 'week4', uv: 300, pv: 200 },
+    { name: 'week5', uv: 200, pv: 300 },
+  ];
 
   return (
     <div className='home-container p-4'>
@@ -229,6 +236,17 @@ const Home: React.FC = () => {
           </div>
         ))}
       </div>
+      <p className='akaya-style white-color text-center  my-3'>
+        Your Performance
+      </p>
+      <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
+        <LineChart data={data}>
+          <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+          <Line type="monotone" dataKey="pv" stroke="#294935" name="Page Views" />
+          <XAxis dataKey="name" />
+          <YAxis />
+        </LineChart>
+      </ResponsiveContainer>
     </div >
   );
 };
