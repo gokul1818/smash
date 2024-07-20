@@ -8,6 +8,8 @@ interface TextInputProps {
   onChange: (value: any) => void;
   className?: string;
   inputLabel?: string;
+  primary?: boolean;
+  disabled?: boolean
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -16,7 +18,9 @@ const TextInput: React.FC<TextInputProps> = ({
   placeholder = "",
   onChange,
   className = "",
-  inputLabel = ""
+  inputLabel = "",
+  primary = true,
+  disabled = false
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -24,15 +28,18 @@ const TextInput: React.FC<TextInputProps> = ({
 
   return (
     <div >
-      <p className="text-start inputBox-label E1-black-color">
+      {Boolean(inputLabel) && <p className="text-start inputBox-label E1-black-color">
         {inputLabel}
-      </p>
+      </p>}
       <input
         type={type}
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
-        className={`primary-textinput-Box  ${className}`}
+        disabled={disabled}
+        className={primary ? `primary-textinput-Box  ${className}` :
+          `transparent-textinput-Box  ${className}`
+        }
       />
     </div>
   );

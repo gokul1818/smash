@@ -123,8 +123,8 @@ const Tracker: React.FC = () => {
 
       </div>
       <div className='top-player-list pb-5'>
-        <p className='  fs-20 mb-3  E4-black-color audiowide-regular text-center '>
-          Players List
+        <p className='  fs-20 mb-3  black-color akaya-style fs-24 text-center '>
+          Top Players List
         </p>
         {topPlayerList.map((players, index) => (
           <div key={index}>

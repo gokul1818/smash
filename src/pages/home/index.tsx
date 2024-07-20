@@ -108,7 +108,7 @@ const Home: React.FC = () => {
     { name: 'week4', uv: 300, pv: 200 },
     { name: 'week5', uv: 200, pv: 300 },
   ];
-  const COLORS = ["#1355D2", '#090335'];;
+  const COLORS = ['#090335', "#1355D2"];;
   const getCurrentMonthDays = () => {
     const currentDate = new Date(); // Get current date object
     const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
@@ -341,7 +341,7 @@ const Home: React.FC = () => {
                 fill="#8884d8"
                 label
               >
-                {data.map((entry, index) => (
+                {duedata.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
@@ -363,7 +363,7 @@ const Home: React.FC = () => {
         </div>
 
         <div className='top-login-list pb-5 '>
-          <p className='  fs-20 mb-3  E4-black-color audiowide-regular text-center '>
+          <p className='  fs-20 mb-3  black-color akaya-style text-center '>
             Today Login Players
           </p>
           {todayPlayerList.map((players, index) => (
@@ -372,15 +372,15 @@ const Home: React.FC = () => {
                 <img src={players.profileimg} className='top-palyer-list-profile-img' alt='rank3' />
                 <div className='w-auto  d-flex align-items-start flex-column'>
                   <p className=' mb-0 black-color akaya-style  ms-2'>
-                   {players.playerName}
+                    {players.playerName}
                   </p>
                   <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                   {players.slotTime}
+                    {players.slotTime}
                   </p>
                 </div>
                 <div className='w-auto  d-flex align-items-start flex-column'>
                   <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                   {players.billDue}
+                    {players.billDue}
                   </p>
                   <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
                     {players.played} Match
