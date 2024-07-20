@@ -30,8 +30,7 @@ const Profile: React.FC = () => {
     const encryptedPhoneNumber = CryptoJS.AES.encrypt(to, "secret_key").toString();
     const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encodeURIComponent(encryptedPhoneNumber)}`;
     const encodedAppLink = encodeURIComponent(appLink);
-    const smsBody = `Click to add user: ${encodedAppLink}`;
-    const smsUri = `sms:?body=${smsBody}`;
+    const smsUri = `sms:?body=${encodedAppLink}`;
     window.open(smsUri);
   };
 
