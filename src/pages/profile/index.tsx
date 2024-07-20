@@ -7,6 +7,7 @@ import proBadge from "../../assets/images/proBadge.svg";
 import dummyImg from "../../assets/images/dummyImg.svg";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import TextInput from "../../components/textInputcomponent";
+import * as CryptoJS from 'crypto-js';
 const Profile: React.FC = () => {
   const [to, setTo] = useState('');
   const [message, setMessage] = useState('');
@@ -26,12 +27,11 @@ const Profile: React.FC = () => {
     { name: 'Bill Due Date ', value: 5 }
   ];
   const sendSMS = () => {
-    const phoneNumber = encodeURIComponent(to);
-    const messageBody = encodeURIComponent(message);
-
-    // Construct the SMS URI
-    const smsUri = `sms:${phoneNumber}?body=${messageBody}`;
-    // Open default SMS app
+    const encryptedPhoneNumber = CryptoJS.AES.encrypt(to, "secret_key").toString();
+    const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encodeURIComponent(encryptedPhoneNumber)}`;
+    const encodedAppLink = encodeURIComponent(appLink);
+    const smsBody = `Click to add user: ${encodedAppLink}`;
+    const smsUri = `sms:?body=${smsBody}`;
     window.open(smsUri);
   };
 
@@ -154,23 +154,14 @@ const Profile: React.FC = () => {
       </div>
       <div className="add-new-user-admin ">
         <TextInput
-          type="text"
+          type="number"
           onChange={(e) => { setTo(e) }}
           value={to}
           placeholder="Enter Phone Number"
           className=" "
           inputLabel="Phone Number"
         />
-        <TextInput
-          type="text"
-          onChange={() => { }}
-          value={""}
-          className=" "
-          inputLabel="Blood Group"
-          placeholder="Enter Blood Group"
 
-
-        />
         <Button
           label="Send SMS"
           height="50px"

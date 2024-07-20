@@ -28,7 +28,7 @@ const TextInput: React.FC<TextInputProps> = ({
 
   return (
     <div >
-      {Boolean(inputLabel) && <p className="text-start inputBox-label E1-black-color">
+      {Boolean(inputLabel) && <p className="text-start inputBox-label E1-black-color ubuntu-regular">
         {inputLabel}
       </p>}
       <input

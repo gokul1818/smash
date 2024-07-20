@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../components/buttonComponent";
 import "./styles.css"
 interface LandingProps {
-  hideNavBar?: boolean;
 }
 
 const Landing: React.FC<LandingProps> = () => {

@@ -7,12 +7,14 @@ import Tracker from "./pages/tracker";
 import Login from "./pages/login";
 import Landing from "./pages/landing";
 import "./assets/themes/commonstyle.css"
+import AddNewUser from "./pages/AddNewUser";
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login hideNavBar />} />
-        <Route path="/landing" element={<Landing hideNavBar />} />
+        <Route path="/login" element={<Login  />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/add-user" element={<AddNewUser />} />
         <Route path="/" element={<Login />} />
         <Route
           path="/*"
