@@ -1,7 +1,7 @@
 .profile-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   align-items: center;
 
   background: linear-gradient(to bottom, #0e0e0e, #021531);
@@ -10,7 +10,16 @@
   font-family: "Akaya Telivigala", system-ui;
   font-size: 22px;
 }
-.profile-btn-container {
-  position: fixed;
-  bottom: 80px;
+
+.add-new-user-admin {
+  width: 350px;
+  height: 270px;
+  min-height: 270px;
+  background: #ffffff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
 }

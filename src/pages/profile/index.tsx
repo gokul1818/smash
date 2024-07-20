@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
@@ -8,7 +8,9 @@ import dummyImg from "../../assets/images/dummyImg.svg";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import TextInput from "../../components/textInputcomponent";
 const Profile: React.FC = () => {
-  const COLORS = ['#090335', "#1355D2"];;
+  const [to, setTo] = useState('');
+  const [message, setMessage] = useState('');
+  const COLORS = ['#090335', "#1355D2"];
   const getCurrentMonthDays = () => {
     const currentDate = new Date(); // Get current date object
     const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
@@ -24,18 +26,17 @@ const Profile: React.FC = () => {
     { name: 'Bill Due Date ', value: 5 }
   ];
   const sendSMS = () => {
-    const phoneNumber = encodeURIComponent(973733363);
-    const messageBody = encodeURIComponent("dgg");
+    const phoneNumber = encodeURIComponent(to);
+    const messageBody = encodeURIComponent(message);
 
     // Construct the SMS URI
     const smsUri = `sms:${phoneNumber}?body=${messageBody}`;
-
     // Open default SMS app
     window.open(smsUri);
   };
 
   return (
-    <div className="profile-container p-4">
+    <div className="profile-container p-4 mb-5">
       <div className=' position-relative'>
         <img src={"pro" === "pro" ? proBadge : "average" === "average" ? averageBadge : beginnerBadge} alt="badge" />
         <img src={dummyImg} className='avaliable-profile-car-img' alt="img" />
@@ -59,6 +60,8 @@ const Profile: React.FC = () => {
               value={"RockyBoy"}
               primary={false}
               className="pb-3 "
+              placeholder="Enter name"
+
             />
           </div>
         </div>
@@ -76,6 +79,7 @@ const Profile: React.FC = () => {
               primary={false}
               className="pb-3 "
               disabled={true}
+
             />
           </div>
         </div>
@@ -90,10 +94,18 @@ const Profile: React.FC = () => {
               value={"o+ve"}
               primary={false}
               className="pb-3 "
+              placeholder="Enter Blood group"
             />
           </div>
         </div>
       </div>
+      <Button
+        label="Edit Profile"
+        height="50px"
+        width="300px"
+        secondaryBtn={true}
+        primaryBtn={false}
+      />
       <div className="subscription-card-conatiner my-5 text-center ">
         <p className='akaya-style black-color text-center fs-24 mb-0'>
           subscription
@@ -129,7 +141,6 @@ const Profile: React.FC = () => {
               ))}
             </Pie>
             <Tooltip />
-            {/* <Legend /> */}
           </PieChart>
         </ResponsiveContainer>
         <div className='d-flex subscription-card-date align-items-center'>
@@ -141,25 +152,36 @@ const Profile: React.FC = () => {
           </p>
         </div>
       </div>
+      <div className="add-new-user-admin ">
+        <TextInput
+          type="text"
+          onChange={(e) => { setTo(e) }}
+          value={to}
+          placeholder="Enter Phone Number"
+          className=" "
+          inputLabel="Phone Number"
+        />
+        <TextInput
+          type="text"
+          onChange={() => { }}
+          value={""}
+          className=" "
+          inputLabel="Blood Group"
+          placeholder="Enter Blood Group"
 
-      <Button
-        label="Send SMS"
-        height="50px"
-        width="300px"
-        secondaryBtn={true}
-        primaryBtn={false}
-        onClick={() => sendSMS()} />
 
-      <div className="profile-btn-container">
+        />
         <Button
-          label="Edit Profile"
-          // onClick={handleNavigate}
+          label="Send SMS"
           height="50px"
-          width="300px"
+          width="100px"
+          className="mt-3 "
           secondaryBtn={true}
           primaryBtn={false}
-        />
+          onClick={() => sendSMS()} />
       </div>
+
+
     </div>
   );
 };
