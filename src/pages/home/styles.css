@@ -122,3 +122,31 @@
   align-items: end;
   height: 233px;
 }
+
+.subscription-card-conatiner {
+  width: 350px;
+  height: auto;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 20px;
+  padding: 10px 10px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+.subscription-card-date {
+  position: absolute;
+  top: 125px;
+}
+.top-login-list {
+  background-color: #fefefe;
+  height: auto;
+  min-height: 500px;
+  width: 100%;
+  padding: 10px;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+}

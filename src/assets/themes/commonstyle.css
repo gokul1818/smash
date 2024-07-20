@@ -18,9 +18,11 @@
   color: #1e1e1e;
 }
 .E4-black-color {
-  color: #4E4E4E;
+  color: #4e4e4e;
 }
-
+.dark-blue {
+  color: #184395;
+}
 /* background color */
 .bg-white-color {
   background-color: #ffffff;
@@ -115,8 +117,6 @@
   font-weight: 700;
   font-style: italic;
 }
-
-
 
 .scrollBar-hide {
   overflow-y: hidden;
