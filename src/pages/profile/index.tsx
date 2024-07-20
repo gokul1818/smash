@@ -28,9 +28,10 @@ const Profile: React.FC = () => {
   ];
   const sendSMS = () => {
     const encryptedPhoneNumber = CryptoJS.AES.encrypt(to, "secret_key").toString();
-    const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encodeURIComponent(encryptedPhoneNumber)}`;
+    const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
+    // const appLink = `https://3d74-2405-201-e020-d999-b0ff-c70b-87ed-f353.ngrok-free.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
-    const smsUri = `sms:?body=${encodedAppLink}`;
+    const smsUri = `sms:${to}?body=${encodedAppLink}`;
     window.open(smsUri);
   };
 

@@ -8,11 +8,14 @@ import Login from "./pages/login";
 import Landing from "./pages/landing";
 import "./assets/themes/commonstyle.css"
 import AddNewUser from "./pages/AddNewUser";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const App: React.FC = () => {
   return (
     <Router>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
-        <Route path="/login" element={<Login  />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/add-user" element={<AddNewUser />} />
         <Route path="/" element={<Login />} />
