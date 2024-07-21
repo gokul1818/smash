@@ -1,16 +1,15 @@
+import * as CryptoJS from 'crypto-js';
 import React, { useState } from "react";
-import "./styles.css";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
-import Button from "../../components/buttonComponent";
-import proBadge from "../../assets/images/proBadge.svg";
 import dummyImg from "../../assets/images/dummyImg.svg";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import proBadge from "../../assets/images/proBadge.svg";
+import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
-import * as CryptoJS from 'crypto-js';
+import "./styles.css";
 const Profile: React.FC = () => {
   const [to, setTo] = useState('');
-  const [message, setMessage] = useState('');
   const COLORS = ['#090335', "#1355D2"];
   const getCurrentMonthDays = () => {
     const currentDate = new Date(); // Get current date object
@@ -28,9 +27,9 @@ const Profile: React.FC = () => {
   ];
   const sendSMS = () => {
 
-    const encryptedPhoneNumber = CryptoJS.AES.encrypt(to, "secret_key").toString();
-    const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
-    // const appLink = `https://3d74-2405-201-e020-d999-b0ff-c70b-87ed-f353.ngrok-free.app/add-user?phone=${encryptedPhoneNumber}`;
+    const encryptedPhoneNumber = CryptoJS.AES.encrypt(JSON.stringify(to), "smash9837").toString();
+    // const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
+    const appLink = `https://3d74-2405-201-e020-d999-b0ff-c70b-87ed-f353.ngrok-free.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
     const smsUri = `sms:${to}?body=${encodedAppLink}`;
     window.open(smsUri);

@@ -1,5 +1,6 @@
 import React from 'react';
 import "./styles.css"
+import { error } from 'console';
 interface ButtonProps {
   onClick?: () => void;
   label: string;
@@ -9,7 +10,7 @@ interface ButtonProps {
   className?: String;
   primaryBtn?: boolean;
   secondaryBtn?: boolean;
-
+  type?: any;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   width = "80%",
   primaryBtn = true,
   secondaryBtn = false,
+  type,
 }) => {
   return (
     <button
@@ -33,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
       }
       disabled={disabled}
       style={{ height, width }}
+      type={type}
     >
       {label}
     </button >
