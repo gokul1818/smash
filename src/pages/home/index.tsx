@@ -10,8 +10,11 @@ import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
 import "./styles.css";
+import { useSelector, useDispatch, } from 'react-redux';
+import { RootState, AppDispatch } from '../../redux/store';
 
 const Home: React.FC = () => {
+  const userData = useSelector((state: RootState) => state.auth.user);
 
   const avaliablePlayerData = [
     {
@@ -183,13 +186,13 @@ const Home: React.FC = () => {
               HELLO,
             </p>
             <p className='akaya-style white-color mb-0'>
-              ROCKY BOY
+              {userData?.name}
             </p>
           </div>
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
-              <p className='streaks-label-date black-color mb-0'>01</p>
+              <p className='streaks-label-date black-color mb-0'>{userData?.streaks }</p>
             </div>
           </div>
         </div>

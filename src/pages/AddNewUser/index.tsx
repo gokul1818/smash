@@ -13,7 +13,6 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [decryptedPhoneNumber, setDecryptedPhoneNumber] = useState<string>("");
-  const [encryptedPhoneNumber, setEncryptedPhoneNumber] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [age, setAge] = useState<number | undefined>(undefined);
   const [bloodGroup, setBloodGroup] = useState<string>("");
@@ -50,9 +49,6 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
 
 
 
-  useEffect(() => {
-
-  }, [location]);
 
   useEffect(() => {
     // Extract encrypted phone number from query parameter 'phone'
@@ -75,7 +71,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
         setDecryptedPhoneNumber(""); // Clear the decrypted phone number
       }
     }
-  }, [encryptedPhoneNumber]);
+  }, [location]);
 
   const navigateToHome = () => {
     navigate("/home");
@@ -107,7 +103,8 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       phoneNumber: decryptedPhoneNumber,
       isAdmin: false,
       timestamp: new Date().toISOString(),
-      password: encryptedPassword// Include timestamp as ISO string
+      password: encryptedPassword,
+      streaks: 0
     };
 
     try {

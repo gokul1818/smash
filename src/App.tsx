@@ -13,7 +13,7 @@ import Tracker from "./pages/tracker";
 import { useSelector, useDispatch, } from 'react-redux';
 import { RootState, AppDispatch } from './redux/store';
 const App: React.FC = () => {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn); // RootState type assumed
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
     if (!isAuthenticated) {

@@ -41,10 +41,9 @@ const Login: React.FC<LoginProps> = () => {
         toast.error("Failed to login. Invalid Password.");
         return;
       }
-
+      const userData = querySnapshot.docs[0].data();
       // Dispatch login action
-      dispatch(login({ phoneNumber: mobile }));
-
+      dispatch(login(userData));
       toast.success("Login successful.");
       navigate("/landing");
 
