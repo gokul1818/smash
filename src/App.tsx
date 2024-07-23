@@ -27,9 +27,9 @@ const App: React.FC = () => {
       <ToastContainer position="top-right" autoClose={3000} /> {/* Toast notifications container */}
       <Routes>
         <Route path="/login" element={<Login />} /> {/* Login route */}
-        <Route path="/landing" element={<Landing />} /> {/* Landing page route */}
         <Route path="/add-user" element={<AddNewUser />} /> {/* Add new user route */}
         <Route path="/" element={<Login />} /> {/* Default route */}
+        {/* <Route path="/landing" element={<Landing />} />  */}
 
         <Route path="/*" element={
           <ProtectedRoute

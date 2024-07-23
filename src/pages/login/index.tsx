@@ -45,7 +45,7 @@ const Login: React.FC<LoginProps> = () => {
       // Dispatch login action
       dispatch(login(userData));
       toast.success("Login successful.");
-      navigate("/landing");
+      navigate("/home");
 
     } catch (error) {
       console.error("Login error:", error);

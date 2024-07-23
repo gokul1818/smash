@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
@@ -12,10 +12,15 @@ import Button from '../../components/buttonComponent';
 import "./styles.css";
 import { useSelector, useDispatch, } from 'react-redux';
 import { RootState, AppDispatch } from '../../redux/store';
+import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../../firebaseconfig';
+import { updateLocationMatch } from '../../redux/reducer/authSlice';
 
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
-
+  const isLocationMatched = useSelector((state: RootState) => state.auth.match);
+  const [location, setLocation] = useState<any>([]);
+  const dispatch = useDispatch()
   const avaliablePlayerData = [
     {
       name: "rocky boy",
@@ -177,6 +182,82 @@ const Home: React.FC = () => {
   ]
 
   console.log(getCurrentMonthDays())
+
+
+  useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        // console.log(lat, lon);
+        setLocation([lat, lon]);
+        fetchLocations([lat, lon]);
+
+      },
+      (error) => { }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, []);
+
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371e3; // Radius of the Earth in meters
+    const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
+    const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude
+    const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude
+
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c;
+    return distance;
+  };
+
+
+
+  const fetchLocations = async (coord: any) => {
+    const hotelRef = collection(db, "BadmintonCourt");
+    const unsubscribeHotel = onSnapshot(hotelRef, (snap) => {
+      const data = snap.docs.map((x) => ({
+        ...x.data(),
+      }));
+      const distance = calculateDistance(
+        coord[0],
+        coord[1],
+        data[0].coordinates[0],
+        data[0].coordinates[1]
+      );
+      const isMatch = distance <= 50;
+      dispatch(updateLocationMatch(isMatch))
+    });
+    return () => {
+      unsubscribeHotel();
+    };
+  };
+
+  const addBadmintonCourt = async (name, latitude, longitude) => {
+    const badmintonCourtsRef = collection(db, 'BadmintonCourt');
+
+    try {
+      const docRef = await addDoc(badmintonCourtsRef, {
+        name: name,
+        coordinates: [latitude, longitude],
+        // Add more fields as needed
+      });
+      console.log('Document written with ID: ', docRef.id);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
+  };
+
+  // addBadmintonCourt('Court A',u location[0], location[1]); // Example coordinates for New York
+
   return (
     <>
       <div className='home-container p-4'>
@@ -192,11 +273,11 @@ const Home: React.FC = () => {
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
-              <p className='streaks-label-date black-color mb-0'>{userData?.streaks }</p>
+              <p className='streaks-label-date black-color mb-0'>{userData?.streaks}</p>
             </div>
           </div>
         </div>
-        <div className='home-start-match-card mt-3'>
+        {isLocationMatched && <div className='home-start-match-card mt-3'>
           <div className='w-25 d-flex flex-column '>
             <img src={crockImg} alt='img' width={100} height={100} />
           </div>
@@ -210,7 +291,7 @@ const Home: React.FC = () => {
               primaryBtn={false}
             />
           </div>
-        </div>
+        </div>}
         <p className='akaya-style white-color text-center  my-3'>
           Avaliable Players
         </p>
