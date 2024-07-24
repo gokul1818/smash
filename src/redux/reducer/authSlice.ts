@@ -1,18 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface User {
-  id: string;
-  name: string;
-  age: number;
-  bloodGroup: string;
-  phoneNumber: number;
-  slot: string;
-  isAdmin: boolean;
-  timestamp: string;
-  streaks: number | 0;
 
-  // Add other relevant fields as per your user data structure
-}
 
 interface AuthState {
   isLoggedIn: boolean;

@@ -8,9 +8,14 @@ import proBadge from "../../assets/images/proBadge.svg";
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import "./styles.css";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 const Profile: React.FC = () => {
   const [to, setTo] = useState('');
+  const [editProfile, setEditProfile] = useState(true)
   const COLORS = ['#090335', "#1355D2"];
+  const userData = useSelector((state: RootState) => state.auth.user);
+
   const getCurrentMonthDays = () => {
     const currentDate = new Date(); // Get current date object
     const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
@@ -42,7 +47,7 @@ const Profile: React.FC = () => {
         <img src={dummyImg} className='avaliable-profile-car-img' alt="img" />
       </div>
       <p className="profile-label fs-24 primarygrey-color mt-3">
-        ROCKYBOY
+        {userData?.name}
       </p>
       <div className=" d-flex  flex-column align-self-center  justify-content-center mt-3" style={{ width: "300px" }}>
         <div className="d-flex w-100 justify-content-between ">
@@ -57,8 +62,9 @@ const Profile: React.FC = () => {
             <TextInput
               type="text"
               onChange={() => { }}
-              value={"RockyBoy"}
+              value={userData?.name}
               primary={false}
+              disabled={editProfile}
               className="pb-3 "
               placeholder="Enter name"
 
@@ -75,7 +81,7 @@ const Profile: React.FC = () => {
             <TextInput
               type="number"
               onChange={() => { }}
-              value={"878783333"}
+              value={userData?.phoneNumber}
               primary={false}
               className="pb-3 "
               disabled={true}
@@ -91,22 +97,25 @@ const Profile: React.FC = () => {
             <TextInput
               type="text"
               onChange={() => { }}
-              value={"o+ve"}
+              value={userData?.bloodGroup}
+
               primary={false}
+              disabled={editProfile}
               className="pb-3 "
               placeholder="Enter Blood group"
             />
           </div>
         </div>
       </div>
-      <Button
-        label="Edit Profile"
+      {/* <Button
+        label={!editProfile ? "Update Profile" : "Edit Profile"}
         height="50px"
         width="300px"
+        onClick={() => { setEditProfile(!editProfile) }}
         secondaryBtn={true}
         primaryBtn={false}
-      />
-      <div className="subscription-card-conatiner my-5 text-center ">
+      /> */}
+      {!userData?.isAdmin ? <div className="subscription-card-conatiner my-5 text-center ">
         <p className='akaya-style black-color text-center fs-24 mb-0'>
           subscription
         </p>
@@ -151,26 +160,26 @@ const Profile: React.FC = () => {
             /31
           </p>
         </div>
-      </div>
-      <div className="add-new-user-admin ">
-        <TextInput
-          type="number"
-          onChange={(e) => { setTo(e) }}
-          value={to}
-          placeholder="Enter Phone Number"
-          className=" "
-          inputLabel="Phone Number"
-        />
+      </div> :
+        <div className="add-new-user-admin my-4">
+          <TextInput
+            type="number"
+            onChange={(e) => { setTo(e) }}
+            value={to}
+            placeholder="Enter Phone Number"
+            className=" "
+            inputLabel="Phone Number"
+          />
 
-        <Button
-          label="Send SMS"
-          height="50px"
-          width="100px"
-          className="mt-3 "
-          secondaryBtn={true}
-          primaryBtn={false}
-          onClick={() => sendSMS()} />
-      </div>
+          <Button
+            label="Send SMS"
+            height="50px"
+            width="100px"
+            className="mt-3 "
+            secondaryBtn={true}
+            primaryBtn={false}
+            onClick={() => sendSMS()} />
+        </div>}
 
 
     </div>

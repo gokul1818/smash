@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { useNavigate } from "react-router-dom";
@@ -41,11 +41,21 @@ const Login: React.FC<LoginProps> = () => {
         toast.error("Failed to login. Invalid Password.");
         return;
       }
-      const userData = querySnapshot.docs[0].data();
+
+
+      const userData = {
+        ...querySnapshot.docs[0].data(),
+        userId: querySnapshot.docs[0].id // Add userId to userData
+      };
+      const userId = querySnapshot.docs[0].id; // Get the document ID of the user
+
       // Dispatch login action
       dispatch(login(userData));
       toast.success("Login successful.");
-      navigate("/home");
+      navigate("/home")
+      await updateDoc(doc(db, "users", userId), {
+        lastLogin: new Date(),
+      });
 
     } catch (error) {
       console.error("Login error:", error);

@@ -12,13 +12,15 @@ import Button from '../../components/buttonComponent';
 import "./styles.css";
 import { useSelector, useDispatch, } from 'react-redux';
 import { RootState, AppDispatch } from '../../redux/store';
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
-import { updateLocationMatch } from '../../redux/reducer/authSlice';
-
+import { login, updateLocationMatch } from '../../redux/reducer/authSlice';
+import { fetchAllUserData, useFetchUserData } from "../../api/apiServices"
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
+  const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
   const isLocationMatched = useSelector((state: RootState) => state.auth.match);
+  const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
   const dispatch = useDispatch()
   const avaliablePlayerData = [
@@ -181,8 +183,9 @@ const Home: React.FC = () => {
 
   ]
 
-  console.log(getCurrentMonthDays())
 
+  useFetchUserData(userId)
+  fetchAllUserData(dispatch)
 
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
@@ -243,7 +246,6 @@ const Home: React.FC = () => {
 
   const addBadmintonCourt = async (name, latitude, longitude) => {
     const badmintonCourtsRef = collection(db, 'BadmintonCourt');
-
     try {
       const docRef = await addDoc(badmintonCourtsRef, {
         name: name,
@@ -256,11 +258,31 @@ const Home: React.FC = () => {
     }
   };
 
+
+
+
   // addBadmintonCourt('Court A',u location[0], location[1]); // Example coordinates for New York
 
+  const updateUserReady = async (isUserReady: boolean) => {
+    if (!userId) {
+      console.error("User ID not found in Redux store.");
+      return;
+    }
+
+    const userDocRef = doc(db, "users", userId);
+
+    try {
+      await updateDoc(userDocRef, {
+        readyMatch: isUserReady,
+      });
+      console.log("User readiness updated in Firestore.");
+    } catch (error) {
+      console.error("Error updating user readiness:", error);
+    }
+  };
   return (
-    <>
-      <div className='home-container p-4'>
+    <div className='home-container'>
+      <div className='p-4'>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <div className='d-flex flex-column'>
             <p className='akaya-style white-color mb-0 '>
@@ -273,22 +295,26 @@ const Home: React.FC = () => {
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
-              <p className='streaks-label-date black-color mb-0'>{userData?.streaks}</p>
+              <p className='streaks-label-date ubuntu-regular  black-color mb-0'>{userData?.streaks}</p>
             </div>
           </div>
         </div>
-        {isLocationMatched && <div className='home-start-match-card mt-3'>
+        {!isLocationMatched && <div className='home-start-match-card mt-3'>
           <div className='w-25 d-flex flex-column '>
             <img src={crockImg} alt='img' width={100} height={100} />
           </div>
           <div className='w-50 d-flex flex-column h-100  align-items-center justify-content-evenly'>
-            <p className='start-match-card-label mb-0 primarygrey-color'>Now your not in match </p>
+            {userData.readyMatch ?
+              <p className='start-match-card-label mb-0 primarygrey-color'>Now your in match </p> :
+              <p className='start-match-card-label mb-0 primarygrey-color'>Now your not in match </p>
+            }
             <Button
-              label="Start Match"
+              label={userData.readyMatch ? "Exit Match" : "Ready "}
               height='30px'
               width='120px'
               secondaryBtn={true}
               primaryBtn={false}
+              onClick={() => { updateUserReady(!userData.readyMatch) }}
             />
           </div>
         </div>}
@@ -297,23 +323,23 @@ const Home: React.FC = () => {
         </p>
         <div className='avaliable-players-container scrollBar-hide'>
 
-          {avaliablePlayerData.map((playersData, index) => (
+          {allUserDetails.filter((x) => x.readyMatch == true).map((playersData, index) => (
             <div className={playersData.level === "pro" ? `avaliable-players-card-pro` :
               playersData.level === "average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
             } key={index}>
               <div className='w-50 position-relative'>
-                <img src={playersData.level === "pro" ? proBadge : playersData.level === "average" ? averageBadge : beginnerBadge} alt="badge" />
+                <img src={playersData.level === "Pro" ? proBadge : playersData.level === "Average" ? averageBadge : beginnerBadge} alt="badge" />
                 <img src={playersData.profileimg} className='avaliable-profile-car-img' alt="img" />
               </div>
               <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
                 <p className='akaya-style fs-24 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
                 <div className='d-flex w-100'>
                   <p className='w-50 akaya-style fs-18 mb-0' >{"Rank :"}</p>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank}</p>
+                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank || "-"}</p>
                 </div>
                 <div className='d-flex w-100'>
                   <p className='w-50 akaya-style fs-18 mb-0' >{"Score :"}</p>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.score}</p>
+                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.level || "-"}</p>
                 </div>
                 <div className='d-flex w-100'>
                   <p className='w-50 akaya-style fs-18 mb-0' >{" Level :"}</p>
@@ -386,99 +412,104 @@ const Home: React.FC = () => {
             </div>
           ))}
         </div>
-        <p className='akaya-style white-color text-center  my-3'>
-          Your Performance
-        </p>
-        <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
-          <LineChart data={data}>
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            {/* <Tooltip /> */}
-          </LineChart>
-        </ResponsiveContainer>
-        <div className="subscription-card-conatiner mb-5 text-center ">
-          <p className='akaya-style black-color text-center fs-24 mb-0'>
-            subscription
-          </p>
-          <div className='d-flex flex-wrap text-center align-tems-center justify-content-center'>
-            <p className='ubuntu-medium black-color text-center  mb-0 '>
-              You have played a total
-            </p>
-            <p className='mb-0 ms-1 dark-blue  ubuntu-bold'>
-              24 match
-            </p>
-            <p className='ubuntu-medium black-color  mb-0  '>
-              this month!
-            </p>
-          </div>
-          <ResponsiveContainer width={100} height={100}>
-            <PieChart width={100} height={100}>
-              <Pie
-                data={duedata}
-                dataKey="value"
-                cx="50%"
-                cy="50%"
-                outerRadius={50}
-                innerRadius={40}
-                fill="#8884d8"
-                label
-              >
-                {duedata.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-              {/* <Legend /> */}
-            </PieChart>
-          </ResponsiveContainer>
-          <div className='d-flex subscription-card-date align-items-center'>
-            <p className='audiowide-regular black-color fs-24 mb-0  '>
-              5
-            </p>
-            <p className='audiowide-regular E4-black-color  mb-0  '>
-              /31
-            </p>
-          </div>
-        </div>
-
-        <div className='top-login-list pb-5 '>
-          <p className='  fs-20 mb-3  black-color akaya-style text-center '>
-            Today Login Players
-          </p>
-          {todayPlayerList.map((players, index) => (
-            <div key={index}>
-              <div className='top-palyer-list-card'>
-                <img src={players.profileimg} className='top-palyer-list-profile-img' alt='rank3' />
-                <div className='w-auto  d-flex align-items-start flex-column'>
-                  <p className=' mb-0 black-color akaya-style  ms-2'>
-                    {players.playerName}
-                  </p>
-                  <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                    {players.slotTime}
-                  </p>
-                </div>
-                <div className='w-auto  d-flex align-items-start flex-column'>
-                  <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                    {players.billDue}
-                  </p>
-                  <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                    {players.played} Match
-                  </p>
-                </div>
-
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
+      {
+        !userData?.isAdmin ?
+          <>
+            <p className='akaya-style white-color text-center  my-3'>
+              Your Performance
+            </p>
+            <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
+              <LineChart data={data}>
+                <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
+                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                {/* <Tooltip /> */}
+              </LineChart>
+            </ResponsiveContainer>
+            <div className="subscription-card-conatiner mb-5 text-center ">
+              <p className='akaya-style black-color text-center fs-24 mb-0'>
+                subscription
+              </p>
+              <div className='d-flex flex-wrap text-center align-tems-center justify-content-center'>
+                <p className='ubuntu-medium black-color text-center  mb-0 '>
+                  You have played a total
+                </p>
+                <p className='mb-0 ms-1 dark-blue  ubuntu-bold'>
+                  24 match
+                </p>
+                <p className='ubuntu-medium black-color  mb-0  '>
+                  this month!
+                </p>
+              </div>
+              <ResponsiveContainer width={100} height={100}>
+                <PieChart width={100} height={100}>
+                  <Pie
+                    data={duedata}
+                    dataKey="value"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={50}
+                    innerRadius={40}
+                    fill="#8884d8"
+                    label
+                  >
+                    {duedata.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  {/* <Legend /> */}
+                </PieChart>
+              </ResponsiveContainer>
+              <div className='d-flex subscription-card-date align-items-center'>
+                <p className='audiowide-regular black-color fs-24 mb-0  '>
+                  5
+                </p>
+                <p className='audiowide-regular E4-black-color  mb-0  '>
+                  /31
+                </p>
+              </div>
+            </div>
+          </> :
+          <div className='top-login-list  scrollBar-hide pb-5 '>
+            <p className='  fs-20 mb-3  black-color akaya-style text-center '>
+              Today Login Players
+            </p>
+            {todayPlayerList.map((players, index) => (
+              <div key={index}>
+                <div className='top-palyer-list-card'>
+                  <img src={players.profileimg} className='top-palyer-list-profile-img' alt='rank3' />
+                  <div className='w-auto  d-flex align-items-start flex-column'>
+                    <p className=' mb-0 black-color akaya-style  ms-2'>
+                      {players.playerName}
+                    </p>
+                    <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                      {players.slotTime}
+                    </p>
+                  </div>
+                  <div className='w-auto  d-flex align-items-start flex-column'>
+                    <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                      {players.billDue}
+                    </p>
+                    <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                      {players.played} Match
+                    </p>
+                  </div>
 
-    </>
+                </div>
+              </div>
+            ))}
+          </div>
+      }
+
+
+    </div >
 
   );
 };
