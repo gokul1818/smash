@@ -15,7 +15,7 @@ import { RootState, AppDispatch } from '../../redux/store';
 import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
 import { login, updateLocationMatch } from '../../redux/reducer/authSlice';
-import { fetchAllUserData, useFetchUserData } from "../../api/apiServices"
+import { fetchAllUserData } from "../../api/apiServices"
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
   const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
@@ -182,10 +182,36 @@ const Home: React.FC = () => {
 
 
   ]
+  const useFetchUserData = (userId: any) => {
 
+    if (!userId) {
+      console.error("User ID not found in Redux store.");
+      return;
+    }
 
-  useFetchUserData(userId)
-  fetchAllUserData(dispatch)
+    const userDocRef = doc(db, "users", userId);
+
+    const unsubscribe = onSnapshot(userDocRef, (doc) => {
+      if (doc.exists()) {
+        const userData = {
+          ...doc.data(),
+          userId: doc.id,
+        };
+        console.log("User data:", userData);
+        dispatch(login(userData)); // Dispatch login action with fetched user data
+      } else {
+        console.log("No such document!");
+      }
+    });
+
+    // Unsubscribe from snapshot listener when component unmounts or when userId changes
+    return () => unsubscribe();
+  };
+  useEffect(() => {
+
+    useFetchUserData(userId)
+    fetchAllUserData(dispatch)
+  }, [userId])
 
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
@@ -263,13 +289,21 @@ const Home: React.FC = () => {
 
   // addBadmintonCourt('Court A',u location[0], location[1]); // Example coordinates for New York
 
-  const updateUserReady = async (isUserReady: boolean) => {
+  const updateUserReady = async () => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
       return;
     }
 
     const userDocRef = doc(db, "users", userId);
+    let isUserReady
+    if (userData?.readyMatch == true) {
+      isUserReady = false
+    } else {
+      isUserReady = true
+
+    }
+    // useFetchUserData(userId)
 
     try {
       await updateDoc(userDocRef, {
@@ -314,7 +348,7 @@ const Home: React.FC = () => {
               width='120px'
               secondaryBtn={true}
               primaryBtn={false}
-              onClick={() => { updateUserReady(!userData.readyMatch) }}
+              onClick={() => updateUserReady()}
             />
           </div>
         </div>}

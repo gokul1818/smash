@@ -54,7 +54,7 @@ const Login: React.FC<LoginProps> = () => {
       toast.success("Login successful.");
       navigate("/home")
       await updateDoc(doc(db, "users", userId), {
-        lastLogin: new Date(),
+        lastLogin: new Date().toISOString(),
       });
 
     } catch (error) {
