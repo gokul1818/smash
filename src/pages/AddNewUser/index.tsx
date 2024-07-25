@@ -106,7 +106,9 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       password: encryptedPassword,
       streaks: 0,
       readyMatch: false,
-      lastLogin:new Date().toISOString()
+      lastLogin: new Date().toISOString(),
+      billDue: new Date().toISOString(),
+      played: 0
 
     };
 

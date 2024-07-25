@@ -172,7 +172,6 @@ const Home: React.FC = () => {
     return () => unsubscribe();
   };
   useEffect(() => {
-
     useFetchUserData(userId)
     fetchAllUserData(dispatch)
   }, [userId])
@@ -211,6 +210,7 @@ const Home: React.FC = () => {
     const distance = R * c;
     return distance;
   };
+
 
 
 
@@ -278,6 +278,20 @@ const Home: React.FC = () => {
       console.error("Error updating user readiness:", error);
     }
   };
+
+  const getLastLoginTodayUser = (lastLogin: any) => {
+    const currentDate = new Date();
+    const lastLoginDate = new Date(lastLogin);
+    // Compare only the date part (year, month, day)
+    const isLastLoginToday = lastLoginDate.getFullYear() === currentDate.getFullYear() &&
+      lastLoginDate.getMonth() === currentDate.getMonth() &&
+      lastLoginDate.getDate() === currentDate.getDate();
+    return isLastLoginToday
+
+  }
+  useEffect(() => {
+    allUserDetails.filter((x) => getLastLoginTodayUser(x.lastLogin) == true)
+  }, [allUserDetails])
   return (
     <div className='home-container'>
       <div className='p-4'>
@@ -490,16 +504,16 @@ const Home: React.FC = () => {
             <p className='  fs-20 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {todayPlayerList.map((players, index) => (
+            {allUserDetails.filter((x) => getLastLoginTodayUser(x.lastLogin) == true).map((players, index) => (
               <div key={index}>
                 <div className='top-palyer-list-card'>
-                  <img src={players.profileimg} className='top-palyer-list-profile-img' alt='rank3' />
+                  <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
                   <div className='w-auto  d-flex align-items-start flex-column'>
                     <p className=' mb-0 black-color akaya-style  ms-2'>
-                      {players.playerName}
+                      {players.name}
                     </p>
                     <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                      {players.slotTime}
+                      {players.slot}
                     </p>
                   </div>
                   <div className='w-auto  d-flex align-items-start flex-column'>
