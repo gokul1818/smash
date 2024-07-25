@@ -23,43 +23,7 @@ const Home: React.FC = () => {
   const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
   const dispatch = useDispatch()
-  const avaliablePlayerData = [
-    {
-      name: "rocky boy",
-      profileimg: dummyImg,
-      level: "pro",
-      rank: 2,
-      score: 100
-    },
-    {
-      name: "rocky boy",
-      profileimg: dummyImg,
-      level: "average",
-      rank: 2,
-      score: 100
-    },
-    {
-      name: "rocky boy",
-      profileimg: dummyImg,
-      level: "beginner",
-      rank: 2,
-      score: 100
-    },
-    {
-      name: "rocky boy",
-      profileimg: dummyImg,
-      level: "pro",
-      rank: 2,
-      score: 100
-    },
-    {
-      name: "rocky boy",
-      profileimg: dummyImg,
-      level: "average",
-      rank: 2,
-      score: 100
-    }
-  ]
+
   const currentMatch = [
     {
       court: 1,
@@ -357,31 +321,42 @@ const Home: React.FC = () => {
         </p>
         <div className='avaliable-players-container scrollBar-hide'>
 
-          {allUserDetails.filter((x) => x.readyMatch == true).map((playersData, index) => (
-            <div className={playersData.level === "pro" ? `avaliable-players-card-pro` :
-              playersData.level === "average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
-            } key={index}>
-              <div className='w-50 position-relative'>
-                <img src={playersData.level === "Pro" ? proBadge : playersData.level === "Average" ? averageBadge : beginnerBadge} alt="badge" />
-                <img src={playersData.profileimg} className='avaliable-profile-car-img' alt="img" />
+          {allUserDetails?.filter((x) => x.readyMatch == true).length > 0 ?
+            allUserDetails?.filter((x) => x.readyMatch == true).map((playersData, index) => (
+              <div className={
+                playersData.level === "Pro" ? `avaliable-players-card-pro` :
+                  playersData.level === "Average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
+              } key={index} >
+                <div className='w-50 position-relative'>
+                  <img src={playersData.level === "Pro" ? proBadge : playersData.level === "Average" ? averageBadge : beginnerBadge} alt="badge" />
+                  <img src={playersData.profileimg || dummyImg} className='avaliable-profile-car-img' alt="img" />
+                </div>
+                <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
+                  <p className='akaya-style fs-24 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
+                  <div className='d-flex w-100'>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{"Rank :"}</p>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank || "-"}</p>
+                  </div>
+                  <div className='d-flex w-100'>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{"Score :"}</p>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.score || "-"}</p>
+                  </div>
+                  <div className='d-flex w-100'>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{" Level :"}</p>
+                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.level}</p>
+                  </div>
+                </div>
               </div>
-              <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
-                <p className='akaya-style fs-24 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
-                <div className='d-flex w-100'>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{"Rank :"}</p>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank || "-"}</p>
-                </div>
-                <div className='d-flex w-100'>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{"Score :"}</p>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.level || "-"}</p>
-                </div>
-                <div className='d-flex w-100'>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{" Level :"}</p>
-                  <p className='w-50 akaya-style fs-18 mb-0' >{playersData.level}</p>
-                </div>
+            ))
+            :
+            <div className={
+              `unavaliable-players-card`
+            }  >
+              <div className='w-100 ubuntu-bold text-center position-relative white-color'>
+                Currenty No Player Avaliable
               </div>
             </div>
-          ))}
+          }
         </div>
         <p className='akaya-style white-color text-center  my-3'>
           Current Match

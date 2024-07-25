@@ -43,6 +43,19 @@
   width: 68px;
   height: 68px;
 }
+.unavaliable-players-card {
+  background-color: #616161;
+  width: 100%;
+  min-width: 100%;
+  height: 150px;
+  margin-right: 20px;
+  border-radius: 20px;
+  padding: 10px;
+  border: 3px solid #ababab;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .avaliable-players-card-pro {
   background-color: #f1dc83;
   width: 100%;
