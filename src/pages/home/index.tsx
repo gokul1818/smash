@@ -504,7 +504,7 @@ const Home: React.FC = () => {
             <p className='  fs-20 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {allUserDetails.filter((x) => getLastLoginTodayUser(x.lastLogin) == true).map((players, index) => (
+            {allUserDetails?.filter((x) => getLastLoginTodayUser(x.lastLogin) == true).map((players, index) => (
               <div key={index}>
                 <div className='top-palyer-list-card'>
                   <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
