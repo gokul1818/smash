@@ -38,10 +38,10 @@ export const fetchAllUserData = (dispatch) => {
   return () => unsubscribe();
 };
 
-export const useFetchUserData = (userId: string | null) => {
-  const [userData, setUserData] = useState<any>(null);
+export const useFetchUserData = (userId: ) => {
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
