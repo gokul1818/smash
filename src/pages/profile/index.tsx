@@ -20,8 +20,6 @@ const Profile: React.FC = () => {
     const currentDate = new Date(); // Get current date object
     const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
     const currentYear = currentDate.getFullYear(); // Get current year
-
-    // Set date to 0 of next month to get the last day of the current month
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     return lastDayOfMonth;
@@ -34,7 +32,6 @@ const Profile: React.FC = () => {
 
     const encryptedPhoneNumber = utf8ToBase64(to)
     const appLink = `https://smash-sigma.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
-    // const appLink = `https://3d74-2405-201-e020-d999-b0ff-c70b-87ed-f353.ngrok-free.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
 
     const smsUri = `sms:${to}?body=${encodedAppLink}`;
@@ -116,7 +113,8 @@ const Profile: React.FC = () => {
         secondaryBtn={true}
         primaryBtn={false}
       /> */}
-      {!userData?.isAdmin ? <div className="subscription-card-conatiner my-5 text-center ">
+      {!userData?.isAdmin ?
+       <div className="subscription-card-conatiner my-5 text-center ">
         <p className='akaya-style black-color text-center fs-24 mb-0'>
           subscription
         </p>

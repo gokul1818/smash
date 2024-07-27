@@ -140,24 +140,18 @@ const Home: React.FC = () => {
       unsubscribeHotel();
     };
   };
-
-
   const updateUserReady = async () => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
       return;
     }
-
     const userDocRef = doc(db, "users", userId);
     let isUserReady
     if (userData?.readyMatch == true) {
       isUserReady = false
     } else {
       isUserReady = true
-
     }
-    // useFetchUserData(userId)
-
     try {
       await updateDoc(userDocRef, {
         readyMatch: isUserReady,
@@ -167,7 +161,6 @@ const Home: React.FC = () => {
       console.error("Error updating user readiness:", error);
     }
   };
-
 
   useEffect(() => {
     allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true)
@@ -299,8 +292,6 @@ const Home: React.FC = () => {
                         width='80px'
                       />
                     </div>
-
-
                   </div>
                   :
                   <Button
@@ -367,7 +358,6 @@ const Home: React.FC = () => {
                     ))}
                   </Pie>
                   <Tooltip />
-                  {/* <Legend /> */}
                 </PieChart>
               </ResponsiveContainer>
               <div className='d-flex subscription-card-date align-items-center'>
@@ -391,7 +381,6 @@ const Home: React.FC = () => {
                   <div className='top-palyer-list-card'>
                     <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
                     <div className='d-flex justify-content-around align-items-center w-100 '>
-
                       <div className='w-auto  d-flex align-items-start flex-column'>
                         <p className=' mb-0 black-color akaya-style  ms-2'>
                           {players.name}
@@ -415,10 +404,7 @@ const Home: React.FC = () => {
             })}
           </div>
       }
-
-
     </div >
-
   );
 };
 
