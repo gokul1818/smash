@@ -3,7 +3,10 @@
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  /* min-height: 100vh; */
   height: 100vh;
+  /* min-height: 100%; */
+  overflow-y: hidden;
   background: linear-gradient(to bottom, #f9f9f9, #bac6d7);
 }
 

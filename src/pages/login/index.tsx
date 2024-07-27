@@ -20,7 +20,6 @@ const Login: React.FC<LoginProps> = () => {
   const [showPassword, setShowPassword] = useState(true);
 
 
-  console.log(utf8ToBase64("test"))
   const handleLogin = async () => {
     try {
       // Fetch user data from Firestore

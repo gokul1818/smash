@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,12 +7,10 @@ import "./assets/themes/commonstyle.css";
 import NavBar from "./components/navBar";
 import AddNewUser from "./pages/AddNewUser";
 import Home from "./pages/home";
-import Landing from "./pages/landing";
 import Login from "./pages/login";
 import Profile from "./pages/profile";
 import Tracker from "./pages/tracker";
-import { useSelector, useDispatch, } from 'react-redux';
-import { RootState, AppDispatch } from './redux/store';
+import { RootState } from './redux/store';
 const App: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn);
 
@@ -24,13 +23,11 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <ToastContainer position="top-right" autoClose={3000} /> {/* Toast notifications container */}
+      <ToastContainer position="top-right" autoClose={3000} /> 
       <Routes>
-        <Route path="/login" element={<Login />} /> {/* Login route */}
-        <Route path="/add-user" element={<AddNewUser />} /> {/* Add new user route */}
-        <Route path="/" element={<Login />} /> {/* Default route */}
-        {/* <Route path="/landing" element={<Landing />} />  */}
-
+        <Route path="/login" element={<Login />} /> 
+        <Route path="/add-user" element={<AddNewUser />} /> 
+        <Route path="/" element={<Login />} /> 
         <Route path="/*" element={
           <ProtectedRoute
             element={
