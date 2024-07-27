@@ -1,4 +1,3 @@
-import CryptoJS from 'crypto-js';
 import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useState } from "react";
 import { useDispatch } from 'react-redux'; // Import useDispatch
@@ -8,9 +7,9 @@ import player from "../../assets/images/player.png";
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
+import { base64ToUtf8, utf8ToBase64 } from '../../helpers/index';
 import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
-import { base64ToUtf8, utf8ToBase64 } from '../../helpers/index';
 interface LoginProps { }
 
 const Login: React.FC<LoginProps> = () => {
