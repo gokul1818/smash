@@ -2,7 +2,7 @@ import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firesto
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 import { Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { fetchAllUserData } from "../../api/apiServices";
+import { fetchAllUserData, useFetchUserData } from "../../api/apiServices";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import crockImg from "../../assets/images/corck_img.svg";
@@ -98,33 +98,8 @@ const Home: React.FC = () => {
     { name: 'Bill Due Date ', value: 5 }
   ];
 
-  const useFetchUserData = (userId: any) => {
-
-    if (!userId) {
-      console.error("User ID not found in Redux store.");
-      return;
-    }
-
-    const userDocRef = doc(db, "users", userId);
-
-    const unsubscribe = onSnapshot(userDocRef, (doc) => {
-      if (doc.exists()) {
-        const userData = {
-          ...doc.data(),
-          userId: doc.id,
-        };
-        console.log("User data:", userData);
-        dispatch(login(userData)); // Dispatch login action with fetched user data
-      } else {
-        console.log("No such document!");
-      }
-    });
-
-    // Unsubscribe from snapshot listener when component unmounts or when userId changes
-    return () => unsubscribe();
-  };
+  const { loading, error } = useFetchUserData(userId);
   useEffect(() => {
-    useFetchUserData(userId)
     fetchAllUserData(dispatch)
   }, [userId])
 
@@ -270,7 +245,7 @@ const Home: React.FC = () => {
         <div className='avaliable-players-container scrollBar-hide'>
 
           {allUserDetails?.filter((x: any) => x.readyMatch == true).length > 0 ?
-            allUserDetails?.filter((x: any) => x.readyMatch == true).map((playersData:any, index:number) => (
+            allUserDetails?.filter((x: any) => x.readyMatch == true).map((playersData: any, index: number) => (
               <div className={
                 playersData.level === "Pro" ? `avaliable-players-card-pro` :
                   playersData.level === "Average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
@@ -438,7 +413,7 @@ const Home: React.FC = () => {
             <p className='  fs-20 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {allUserDetails?.filter((x:any) => getLastLoginTodayUser(x.lastLogin) == true).map((players:any, index:number) => (
+            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => (
               <div key={index}>
                 <div className='top-palyer-list-card'>
                   <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
