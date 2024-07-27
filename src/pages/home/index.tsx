@@ -1,5 +1,8 @@
+import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useDispatch, useSelector, } from 'react-redux';
+import { Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { fetchAllUserData } from "../../api/apiServices";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import crockImg from "../../assets/images/corck_img.svg";
@@ -9,13 +12,10 @@ import proBadge from "../../assets/images/proBadge.svg";
 import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
-import "./styles.css";
-import { useSelector, useDispatch, } from 'react-redux';
-import { RootState, AppDispatch } from '../../redux/store';
-import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
 import { login, updateLocationMatch } from '../../redux/reducer/authSlice';
-import { fetchAllUserData } from "../../api/apiServices"
+import { RootState } from '../../redux/store';
+import "./styles.css";
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
   const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
@@ -97,55 +97,7 @@ const Home: React.FC = () => {
     { name: 'Month', value: getCurrentMonthDays() - 5 },
     { name: 'Bill Due Date ', value: 5 }
   ];
-  const todayPlayerList = [
 
-    {
-      playerName: "RockyBoy",
-      profileimg: dummyImg,
-      billDue: "10 more days",
-      slotTime: "9:00 to 10:00 pm",
-      played: 5
-
-    },
-
-    {
-      playerName: "RockyBoy",
-      profileimg: dummyImg,
-      billDue: "10 more days",
-      slotTime: "9:00 to 10:00 pm",
-      played: 5
-
-    },
-
-    {
-      playerName: "RockyBoy",
-      profileimg: dummyImg,
-      billDue: "10 more days",
-      slotTime: "9:00 to 10:00 pm",
-      played: 5
-
-    },
-
-    {
-      playerName: "RockyBoy",
-      profileimg: dummyImg,
-      billDue: "10 more days",
-      slotTime: "9:00 to 10:00 pm",
-      played: 5
-
-    },
-
-    {
-      playerName: "RockyBoy",
-      profileimg: dummyImg,
-      billDue: "10 more days",
-      slotTime: "9:00 to 10:00 pm",
-      played: 5
-
-    },
-
-
-  ]
   const useFetchUserData = (userId: any) => {
 
     if (!userId) {
@@ -234,24 +186,6 @@ const Home: React.FC = () => {
     };
   };
 
-  const addBadmintonCourt = async (name, latitude, longitude) => {
-    const badmintonCourtsRef = collection(db, 'BadmintonCourt');
-    try {
-      const docRef = await addDoc(badmintonCourtsRef, {
-        name: name,
-        coordinates: [latitude, longitude],
-        // Add more fields as needed
-      });
-      console.log('Document written with ID: ', docRef.id);
-    } catch (error) {
-      console.error('Error adding document: ', error);
-    }
-  };
-
-
-
-
-  // addBadmintonCourt('Court A',u location[0], location[1]); // Example coordinates for New York
 
   const updateUserReady = async () => {
     if (!userId) {
@@ -290,7 +224,7 @@ const Home: React.FC = () => {
 
   }
   useEffect(() => {
-    allUserDetails.filter((x) => getLastLoginTodayUser(x.lastLogin) == true)
+    allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true)
   }, [allUserDetails])
   return (
     <div className='home-container'>
@@ -335,8 +269,8 @@ const Home: React.FC = () => {
         </p>
         <div className='avaliable-players-container scrollBar-hide'>
 
-          {allUserDetails?.filter((x) => x.readyMatch == true).length > 0 ?
-            allUserDetails?.filter((x) => x.readyMatch == true).map((playersData, index) => (
+          {allUserDetails?.filter((x: any) => x.readyMatch == true).length > 0 ?
+            allUserDetails?.filter((x: any) => x.readyMatch == true).map((playersData:any, index:number) => (
               <div className={
                 playersData.level === "Pro" ? `avaliable-players-card-pro` :
                   playersData.level === "Average" ? `avaliable-players-card-average` : `avaliable-players-card-beginner`
@@ -504,7 +438,7 @@ const Home: React.FC = () => {
             <p className='  fs-20 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {allUserDetails?.filter((x) => getLastLoginTodayUser(x.lastLogin) == true).map((players, index) => (
+            {allUserDetails?.filter((x:any) => getLastLoginTodayUser(x.lastLogin) == true).map((players:any, index:number) => (
               <div key={index}>
                 <div className='top-palyer-list-card'>
                   <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />

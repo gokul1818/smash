@@ -1,12 +1,12 @@
-import CryptoJS from 'crypto-js';
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore"; // Import Firestore functions
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify"; // Import toast notifications
+import { toast } from "react-toastify"; // Import toast notifications
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
-import "./styles.css"// Import Firebase instance
+import { base64ToUtf8, utf8ToBase64 } from '../../helpers';
+import "./styles.css"; // Import Firebase instance
 interface AddNewUserProps { }
 
 const AddNewUser: React.FC<AddNewUserProps> = () => {
@@ -58,13 +58,9 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
     if (encryptedPhone) {
 
       try {
-        const decryptedPhone = CryptoJS.AES.decrypt(
-          encryptedPhone,
-          "smash9837"
-        ).toString(CryptoJS.enc.Utf8);
-        var decryptedData = JSON.parse(decryptedPhone.toString(CryptoJS.enc.Utf8));
-        console.log(decryptedData)
-        setDecryptedPhoneNumber(decryptedData);
+        const decryptedPhone = base64ToUtf8(encryptedPhone)
+        console.log(decryptedPhone)
+        setDecryptedPhoneNumber(decryptedPhone);
       } catch (error) {
         console.error("Error decrypting phone number:", error);
         // Handle decryption error, e.g., display an error message
@@ -91,7 +87,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
     }
 
 
-    const encryptedPassword = CryptoJS.AES.encrypt(password, "secret_key").toString();
+    const encryptedPassword = utf8ToBase64(password);
 
     // Prepare data object
     const newUser = {

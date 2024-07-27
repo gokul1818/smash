@@ -10,6 +10,7 @@ import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
 import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
+import { base64ToUtf8, utf8ToBase64 } from '../../helpers/index';
 interface LoginProps { }
 
 const Login: React.FC<LoginProps> = () => {
@@ -19,6 +20,8 @@ const Login: React.FC<LoginProps> = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
 
+
+  console.log(utf8ToBase64("test"))
   const handleLogin = async () => {
     try {
       // Fetch user data from Firestore
@@ -32,12 +35,10 @@ const Login: React.FC<LoginProps> = () => {
       }
 
       const encryptedPassword = querySnapshot.docs[0].data().password;
-      const decryptedPassword = CryptoJS.AES.decrypt(
-        encryptedPassword,
-        "smash9837"
-      ).toString(CryptoJS.enc.Utf8);
-      console.log(decryptedPassword)
-      if (password !== "test") {
+      console.log(encryptedPassword)
+      const decryptedPassword = base64ToUtf8(encryptedPassword);
+      console.log(decryptedPassword, "dddd");
+      if (password !== decryptedPassword) {
         toast.error("Failed to login. Invalid Password.");
         return;
       }

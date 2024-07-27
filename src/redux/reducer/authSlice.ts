@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
   isLoggedIn: boolean;
-  user:   null;
+  user:   any;
   match: boolean;
 }
 

@@ -1,5 +1,5 @@
-import * as CryptoJS from 'crypto-js';
 import React, { useState } from "react";
+import { useSelector } from 'react-redux';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
@@ -7,9 +7,9 @@ import dummyImg from "../../assets/images/dummyImg.svg";
 import proBadge from "../../assets/images/proBadge.svg";
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
-import "./styles.css";
-import { useSelector } from 'react-redux';
+import { utf8ToBase64 } from '../../helpers';
 import { RootState } from '../../redux/store';
+import "./styles.css";
 const Profile: React.FC = () => {
   const [to, setTo] = useState('');
   const [editProfile, setEditProfile] = useState(true)
@@ -32,10 +32,11 @@ const Profile: React.FC = () => {
   ];
   const sendSMS = () => {
 
-    const encryptedPhoneNumber = CryptoJS.AES.encrypt(JSON.stringify(to), "smash9837").toString();
+    const encryptedPhoneNumber = utf8ToBase64(to)
     const appLink = `https://smash-badminton-ts.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
     // const appLink = `https://3d74-2405-201-e020-d999-b0ff-c70b-87ed-f353.ngrok-free.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
+
     const smsUri = `sms:${to}?body=${encodedAppLink}`;
     window.open(smsUri);
   };
