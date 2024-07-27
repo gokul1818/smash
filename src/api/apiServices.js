@@ -38,7 +38,7 @@ export const fetchAllUserData = (dispatch) => {
   return () => unsubscribe();
 };
 
-export const useFetchUserData = (userId ) => {
+export const useFetchUserData = (userId) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,22 +53,26 @@ export const useFetchUserData = (userId ) => {
 
     const userDocRef = doc(db, "users", userId);
 
-    const unsubscribe = onSnapshot(userDocRef, (doc) => {
-      if (doc.exists()) {
-        const data = {
-          ...doc.data(),
-          userId: doc.id,
-        };
-        setUserData(data);
-        dispatch(login(data)); // Dispatch login action with fetched user data
-      } else {
-        setError("No such document!");
+    const unsubscribe = onSnapshot(
+      userDocRef,
+      (doc) => {
+        if (doc.exists()) {
+          const data = {
+            ...doc.data(),
+            userId: doc.id,
+          };
+          setUserData(data);
+          dispatch(login(data)); // Dispatch login action with fetched user data
+        } else {
+          setError("No such document!");
+        }
+        setLoading(false);
+      },
+      (error) => {
+        setError(error.message);
+        setLoading(false);
       }
-      setLoading(false);
-    }, (error) => {
-      setError(error.message);
-      setLoading(false);
-    });
+    );
 
     return () => unsubscribe(); // Cleanup on unmount or userId change
   }, [userId, dispatch]);

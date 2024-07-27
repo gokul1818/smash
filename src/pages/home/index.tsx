@@ -13,6 +13,7 @@ import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
 import { db } from '../../firebaseconfig';
+import { calculateDistance, getDateFormatISO, getDaysInMonth, getLastLoginTodayUser } from '../../helpers';
 import { updateLocationMatch } from '../../redux/reducer/authSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
@@ -82,20 +83,14 @@ const Home: React.FC = () => {
     { name: 'week4', uv: 300, pv: 200 },
     { name: 'week5', uv: 200, pv: 300 },
   ];
-  const COLORS = ['#090335', "#1355D2"];;
-  const getCurrentMonthDays = () => {
-    const currentDate = new Date(); // Get current date object
-    const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
-    const currentYear = currentDate.getFullYear(); // Get current year
+  const COLORS = ["#1355D2", '#090335'];;
 
-    // Set date to 0 of next month to get the last day of the current month
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    return lastDayOfMonth;
-  };
+  const { formattedDateOnly } = getDateFormatISO(userData.billDue)
+  const todayDate = new Date().getDate()
+  const pendingDayToBill = Number(getDaysInMonth(userData.billDue)) - Math.abs(Number(formattedDateOnly) - Number(todayDate))
   const duedata = [
-    { name: 'Month', value: getCurrentMonthDays() - 5 },
-    { name: 'Bill Due Date ', value: 5 }
+    { name: 'Month', value: Number(getDaysInMonth(userData.billDue) - pendingDayToBill) },
+    { name: 'Bill Due Date ', value: pendingDayToBill }
   ];
 
   const { loading, error } = useFetchUserData(userId);
@@ -121,22 +116,7 @@ const Home: React.FC = () => {
     };
   }, []);
 
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371e3; // Radius of the Earth in meters
-    const φ1 = (lat1 * Math.PI) / 180; // Convert latitude 1 to radians
-    const φ2 = (lat2 * Math.PI) / 180; // Convert latitude 2 to radians
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180; // Difference in latitude
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180; // Difference in longitude
 
-    const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = R * c;
-    return distance;
-  };
 
 
 
@@ -188,16 +168,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const getLastLoginTodayUser = (lastLogin: any) => {
-    const currentDate = new Date();
-    const lastLoginDate = new Date(lastLogin);
-    // Compare only the date part (year, month, day)
-    const isLastLoginToday = lastLoginDate.getFullYear() === currentDate.getFullYear() &&
-      lastLoginDate.getMonth() === currentDate.getMonth() &&
-      lastLoginDate.getDate() === currentDate.getDate();
-    return isLastLoginToday
 
-  }
   useEffect(() => {
     allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true)
   }, [allUserDetails])
@@ -361,7 +332,7 @@ const Home: React.FC = () => {
                 {/* <Tooltip /> */}
               </LineChart>
             </ResponsiveContainer>
-            <div className="subscription-card-conatiner mb-5 text-center ">
+            <div className="subscription-card-conatiner    text-center ">
               <p className='akaya-style black-color text-center fs-24 mb-0'>
                 subscription
               </p>
@@ -370,7 +341,7 @@ const Home: React.FC = () => {
                   You have played a total
                 </p>
                 <p className='mb-0 ms-1 dark-blue  ubuntu-bold'>
-                  24 match
+                  {userData?.played} match for
                 </p>
                 <p className='ubuntu-medium black-color  mb-0  '>
                   this month!
@@ -401,10 +372,10 @@ const Home: React.FC = () => {
               </ResponsiveContainer>
               <div className='d-flex subscription-card-date align-items-center'>
                 <p className='audiowide-regular black-color fs-24 mb-0  '>
-                  5
+                  {pendingDayToBill}
                 </p>
                 <p className='audiowide-regular E4-black-color  mb-0  '>
-                  /31
+                  /{getDaysInMonth(userData?.billDue)}
                 </p>
               </div>
             </div>
@@ -413,30 +384,35 @@ const Home: React.FC = () => {
             <p className='  fs-20 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => (
-              <div key={index}>
-                <div className='top-palyer-list-card'>
-                  <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
-                  <div className='w-auto  d-flex align-items-start flex-column'>
-                    <p className=' mb-0 black-color akaya-style  ms-2'>
-                      {players.name}
-                    </p>
-                    <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                      {players.slot}
-                    </p>
-                  </div>
-                  <div className='w-auto  d-flex align-items-start flex-column'>
-                    <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                      {players.billDue}
-                    </p>
-                    <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                      {players.played} Match
-                    </p>
-                  </div>
+            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
+              const { formattedTime } = getDateFormatISO(players.lastLogin);
+              return (
+                <div key={index}>
+                  <div className='top-palyer-list-card'>
+                    <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                    <div className='d-flex justify-content-around align-items-center w-100 '>
 
+                      <div className='w-auto  d-flex align-items-start flex-column'>
+                        <p className=' mb-0 black-color akaya-style  ms-2'>
+                          {players.name}
+                        </p>
+                        <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                          {players.slot}
+                        </p>
+                      </div>
+                      <div className='w-auto  d-flex align-items-start flex-column'>
+                        <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                          {formattedTime}
+                        </p>
+                        <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                          {players.played} Match
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
       }
 
