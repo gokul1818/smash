@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 import { Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -13,7 +13,7 @@ import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
 import { db } from '../../firebaseconfig';
-import { login, updateLocationMatch } from '../../redux/reducer/authSlice';
+import { updateLocationMatch } from '../../redux/reducer/authSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
 const Home: React.FC = () => {
