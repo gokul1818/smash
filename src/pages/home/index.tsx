@@ -256,14 +256,7 @@ const Home: React.FC = () => {
               {userData?.name}
             </p>
           </div>
-          {/* <Button
-            label={userData.readyMatch ? "Exit Match" : "Ready "}
-            height='30px'
-            width='120px'
-            secondaryBtn={true}
-            primaryBtn={false}
-            onClick={() => updateCourt()}
-          /> */}
+    
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
@@ -409,6 +402,7 @@ const Home: React.FC = () => {
               </div>
             ))
           }
+              </div>
 
           {
             !userData?.isAdmin ?
@@ -467,7 +461,6 @@ const Home: React.FC = () => {
 
               </div>
           }
-        </div >
       </div >
     </div >
 
