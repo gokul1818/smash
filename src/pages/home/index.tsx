@@ -335,132 +335,139 @@ const Home: React.FC = () => {
           Current Match
         </p>
         <div className='current-match-container scrollBar-hide mb-5'>
-          {searchloading ?
-            <ScaningLoading /> :
+          {
             courtDetails?.map((match: any, index: any) => (
 
               <div className={"palyers-match-card"} key={index}
                 style={{ backgroundImage: `url(${court})` }}>
-                {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
-                  <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                    <img src={x.profileimg} className='profile-img' alt='img' />
+
+                {searchloading ?
+                  <ScaningLoading /> :
+                  <div>
+
+                    {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
+                      <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                        <img src={x.profileimg} className='profile-img' alt='img' />
+                      </div>
+                    )) :
+                      Array.of(1, 2).map((x, index) => (
+                        <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                          <img src={QuestionMark} className='profile-img' alt='img' />
+                        </div>
+                      ))
+                    }
+                    {Boolean(match.start) ?
+                      match.players.slice(2, 4).map((x: any, index: any) => (
+                        <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
+                          <img src={x.profileimg} className='profile-img' alt="img" />
+                        </div>
+                      )) :
+                      Array.of(3, 4).map((x, index) => (
+                        <div className='player-profile-img1' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                          <img src={QuestionMark} className='profile-img' alt='img' />
+                        </div>
+                      ))}
+
+                    <div className='palyers-match-btn-container'>
+                      {match.start ?
+                        <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
+                          {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
+                            <Button
+                              label="WON"
+                              height='30px'
+                              width='80px'
+                              onClick={() => handleWonMatch(true)}
+
+                            />
+                            <Button
+                              label="WON"
+                              height='30px'
+                              width='80px'
+                              onClick={() => handleWonMatch(false)}
+
+                            />
+                          </div> : ""}
+                        </div>
+                        :
+                        <Button
+                          label="Start Match"
+                          height='30px'
+                          width='120px'
+                          onClick={() => handleStartNewMatch()}
+                        />
+
+                      }
+                    </div>
+
                   </div>
-                )) :
-                  Array.of(1, 2).map((x, index) => (
-                    <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                      <img src={QuestionMark} className='profile-img' alt='img' />
-                    </div>
-                  ))
                 }
-                {Boolean(match.start) ?
-                  match.players.slice(2, 4).map((x: any, index: any) => (
-                    <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
-                      <img src={x.profileimg} className='profile-img' alt="img" />
-                    </div>
-                  )) :
-                  Array.of(3, 4).map((x, index) => (
-                    <div className='player-profile-img1' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                      <img src={QuestionMark} className='profile-img' alt='img' />
-                    </div>
-                  ))}
-
-                <div className='palyers-match-btn-container'>
-                  {match.start ?
-                    <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                      {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
-                        <Button
-                          label="WON"
-                          height='30px'
-                          width='80px'
-                          onClick={() => handleWonMatch(true)}
-
-                        />
-                        <Button
-                          label="WON"
-                          height='30px'
-                          width='80px'
-                          onClick={() => handleWonMatch(false)}
-
-                        />
-                      </div> : ""}
-                    </div>
-                    :
-                    <Button
-                      label="Start Match"
-                      height='30px'
-                      width='120px'
-                      onClick={() => handleStartNewMatch()}
-                    />
-
-                  }
-                </div>
 
               </div>
             ))
           }
-        </div>
-      </div>
 
-      {
-        !userData?.isAdmin ?
-          <>
-            <p className='akaya-style white-color text-center  my-3'>
-              Your Performance
-            </p>
-            <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
-              <LineChart data={data}>
-                <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                <XAxis dataKey="name" />
-                <YAxis />
-              </LineChart>
-            </ResponsiveContainer>
-            <SubscriptionCard />
-          </> :
-          <div className='top-login-list  scrollBar-hide pb-5 '>
-            <p className='  fs-24 mb-3  black-color akaya-style text-center '>
-              Today Login Players
-            </p>
-            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
-              allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
-                const { formattedTime } = getDateFormatISO(players.lastLogin);
-                return (
-                  <div key={index}>
-                    <div className='top-palyer-list-card'>
-                      <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
-                      <div className='d-flex justify-content-around align-items-center w-100 '>
-                        <div className='w-auto  d-flex align-items-start flex-column'>
-                          <p className=' mb-0 black-color akaya-style  ms-2'>
-                            {players.name}
-                          </p>
-                          <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                            {players.slot}
-                          </p>
-                        </div>
-                        <div className='w-auto  d-flex align-items-start flex-column'>
-                          <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                            {formattedTime}
-                          </p>
-                          <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                            {players.todayMatchPlayed} Match
-                          </p>
+          {
+            !userData?.isAdmin ?
+              <>
+                <p className='akaya-style white-color text-center  my-3'>
+                  Your Performance
+                </p>
+                <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
+                  <LineChart data={data}>
+                    <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
+                    <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                  </LineChart>
+                </ResponsiveContainer>
+                <SubscriptionCard />
+              </> :
+              <div className='top-login-list  scrollBar-hide pb-5 '>
+                <p className='  fs-24 mb-3  black-color akaya-style text-center '>
+                  Today Login Players
+                </p>
+                {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
+                  allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
+                    const { formattedTime } = getDateFormatISO(players.lastLogin);
+                    return (
+                      <div key={index}>
+                        <div className='top-palyer-list-card'>
+                          <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                          <div className='d-flex justify-content-around align-items-center w-100 '>
+                            <div className='w-auto  d-flex align-items-start flex-column'>
+                              <p className=' mb-0 black-color akaya-style  ms-2'>
+                                {players.name}
+                              </p>
+                              <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                                {players.slot}
+                              </p>
+                            </div>
+                            <div className='w-auto  d-flex align-items-start flex-column'>
+                              <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                                {formattedTime}
+                              </p>
+                              <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                                {players.todayMatchPlayed} Match
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                )
-              }) :
-              <p className='  fs-20 mb-3  black-color akaya-style text-center '>
-                No One Login Today
-              </p>
+                    )
+                  }) :
+                  <p className='  fs-20 mb-3  black-color akaya-style text-center '>
+                    No One Login Today
+                  </p>
 
-            }
+                }
 
-          </div>
-      }
+              </div>
+          }
+        </div >
+      </div >
     </div >
-  );
-};
 
+  )
+}
 export default Home;
 
