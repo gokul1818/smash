@@ -14,9 +14,9 @@ interface User {
 const sortByRank = (usersData: User[], ascending = true): User[] => {
   return [...usersData].sort((a, b) => {
     if (ascending) {
-      return a.rank - b.rank; // Ascending order
+      return a.score - b.score; // Ascending order
     } else {
-      return b.rank - a.rank; // Descending order
+      return b.score - a.score; // Descending order
     }
   });
 };
@@ -53,7 +53,7 @@ const Tracker: React.FC = () => {
   // Sort user details whenever allUserDetails changes
   useEffect(() => {
     if (allUserDetails.length) {
-      const sorted = sortByRank(allUserDetails, true);
+      const sorted = sortByRank(allUserDetails, false);
       setSortedUserDetails(sorted);
     }
   }, [allUserDetails]);
@@ -103,7 +103,7 @@ const Tracker: React.FC = () => {
               <div className='w-50  d-flex align-items-center'>
                 <img src={dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
                 <p className='  fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
-                  #{players.rank}
+                  #{index+1}
                 </p>
               </div>
               <div className='d-flex flex-column w-50 align-items-start'>

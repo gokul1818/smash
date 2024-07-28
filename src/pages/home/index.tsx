@@ -249,14 +249,14 @@ const Home: React.FC = () => {
       <div className='p-4'>
         <div className="d-flex flex-row justify-content-between align-items-center">
           <div className='d-flex flex-column'>
-            <p className='akaya-style white-color mb-0 '>
+            <p className='akaya-style  white-color mb-0 '>
               HELLO,
             </p>
-            <p className='akaya-style white-color mb-0'>
+            <p className='akaya-style  white-color mb-0'>
               {userData?.name}
             </p>
           </div>
-    
+
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
@@ -283,7 +283,7 @@ const Home: React.FC = () => {
             />
           </div>
         </div>}
-        <p className='akaya-style white-color text-center  my-3'>
+        <p className='audiowide-regular white-color text-center  my-3'>
           Avaliable Players
         </p>
         <div className='avaliable-players-container scrollBar-hide'>
@@ -298,18 +298,18 @@ const Home: React.FC = () => {
                   <img src={playersData.profileimg || dummyImg} className='avaliable-profile-car-img' alt="img" />
                 </div>
                 <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
-                  <p className='akaya-style fs-24 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
+                  <p className='audiowide-regular fs-20 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
                   <div className='d-flex w-100'>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{"Rank :"}</p>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.rank || "-"}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{"Streaks :"}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{playersData.streaks || "-"}</p>
                   </div>
                   <div className='d-flex w-100'>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{"Score :"}</p>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.score || "-"}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{"Score :"}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{playersData.score || "-"}</p>
                   </div>
                   <div className='d-flex w-100'>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{" Level :"}</p>
-                    <p className='w-50 akaya-style fs-18 mb-0' >{playersData.level}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{" Level :"}</p>
+                    <p className='w-50 ubuntu-regular fs-18 mb-0' >{playersData.level}</p>
                   </div>
                 </div>
               </div>
@@ -324,7 +324,7 @@ const Home: React.FC = () => {
             </div>
           }
         </div>
-        <p className='akaya-style white-color text-center  my-3'>
+        <p className='audiowide-regular white-color text-center  my-3'>
           Current Match
         </p>
         <div className='current-match-container scrollBar-hide mb-5'>
@@ -402,65 +402,65 @@ const Home: React.FC = () => {
               </div>
             ))
           }
-              </div>
+        </div>
 
-          {
-            !userData?.isAdmin ?
-              <>
-                <p className='akaya-style white-color text-center  my-3'>
-                  Your Performance
-                </p>
-                <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
-                  <LineChart data={data}>
-                    <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
-                    <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                  </LineChart>
-                </ResponsiveContainer>
-                <SubscriptionCard />
-              </> :
-              <div className='top-login-list  scrollBar-hide pb-5 '>
-                <p className='  fs-24 mb-3  black-color akaya-style text-center '>
-                  Today Login Players
-                </p>
-                {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
-                  allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
-                    const { formattedTime } = getDateFormatISO(players.lastLogin);
-                    return (
-                      <div key={index}>
-                        <div className='top-palyer-list-card'>
-                          <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
-                          <div className='d-flex justify-content-around align-items-center w-100 '>
-                            <div className='w-auto  d-flex align-items-start flex-column'>
-                              <p className=' mb-0 black-color akaya-style  ms-2'>
-                                {players.name}
-                              </p>
-                              <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                                {players.slot}
-                              </p>
-                            </div>
-                            <div className='w-auto  d-flex align-items-start flex-column'>
-                              <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                                {formattedTime}
-                              </p>
-                              <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                                {players.todayMatchPlayed} Match
-                              </p>
-                            </div>
+        {
+          !userData?.isAdmin ?
+            <>
+              <p className='ubuntu-regular white-color text-center  my-3'>
+                Your Performance
+              </p>
+              <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
+                <LineChart data={data}>
+                  <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
+                  <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                </LineChart>
+              </ResponsiveContainer>
+              <SubscriptionCard />
+            </> :
+            <div className='top-login-list  scrollBar-hide pb-5 '>
+              <p className='  fs-20 mb-3  black-color audiowide-regular text-center '>
+                Today Login Players
+              </p>
+              {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
+                allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
+                  const { formattedTime } = getDateFormatISO(players.lastLogin);
+                  return (
+                    <div key={index}>
+                      <div className='top-palyer-list-card'>
+                        <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                        <div className='d-flex justify-content-around align-items-center w-100 '>
+                          <div className='w-auto  d-flex align-items-start flex-column'>
+                            <p className=' mb-0 black-color ubuntu-regular  ms-2'>
+                              {players.name}
+                            </p>
+                            <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                              {players.slot}
+                            </p>
+                          </div>
+                          <div className='w-auto  d-flex align-items-start flex-column'>
+                            <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                              {formattedTime}
+                            </p>
+                            <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                              {players.todayMatchPlayed} Match
+                            </p>
                           </div>
                         </div>
                       </div>
-                    )
-                  }) :
-                  <p className='  fs-20 mb-3  black-color akaya-style text-center '>
-                    No One Login Today
-                  </p>
+                    </div>
+                  )
+                }) :
+                <p className='  fs-20 mb-3  black-color ubuntu-regular text-center '>
+                  No One Login Today
+                </p>
 
-                }
+              }
 
-              </div>
-          }
+            </div>
+        }
       </div >
     </div >
 
