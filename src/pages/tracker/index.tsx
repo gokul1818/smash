@@ -1,11 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import "./styles.css"
 import dummyImg from "../../assets/images/dummyImg.svg";
 import Podium from "../../assets/images/Podium.svg";
+import "./styles.css";
 
-import Button from '../../components/buttonComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { fetchAllUserData } from '../../api/apiServices';
+interface User {
+  rank: number;
+  [key: string]: any; // Allows additional properties
+}
+
+const sortByRank = (usersData: User[], ascending = true): User[] => {
+  return [...usersData].sort((a, b) => {
+    if (ascending) {
+      return a.rank - b.rank; // Ascending order
+    } else {
+      return b.rank - a.rank; // Descending order
+    }
+  });
+};
+
 const Tracker: React.FC = () => {
-  const [isFirstHalfVisible, setIsFirstHalfVisible] = useState(false);
+  const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
+  const dispatch = useDispatch()
+  const userData = useSelector((state: RootState) => state.auth.user);
+  const userId = userData?.userId
+  const [sortedUserDetails, setSortedUserDetails] = useState<User[]>([]); const [isFirstHalfVisible, setIsFirstHalfVisible] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
 
@@ -24,100 +45,50 @@ const Tracker: React.FC = () => {
     };
   }, []);
 
-  const topPlayerList = [
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
 
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-    {
-      playerName: "RockyBoy",
-      rank: 2,
-      score: 3,
-      profileimg: dummyImg
-    },
-  ]
+  useEffect(() => {
+    fetchAllUserData(dispatch);
+  }, [userId, dispatch]);
 
+  // Sort user details whenever allUserDetails changes
+  useEffect(() => {
+    if (allUserDetails.length) {
+      const sorted = sortByRank(allUserDetails, true);
+      setSortedUserDetails(sorted);
+    }
+  }, [allUserDetails]);
+
+  console.log(sortedUserDetails)
   return (
     <div className='leaderboard-container p-4'>
       <div className={`first-half ${isFirstHalfVisible ? 'fade-in' : ''}`}>
         <div className="d-flex flex-row justify-content-around align-items-center">
-          <Button
-            label="Weekly"
-            height='30px'
-            width='120px'
-            secondaryBtn={true}
-            primaryBtn={false}
-          />
-          <Button
-            label="All Time"
-            height='30px'
-            width='120px'
-            primaryBtn={true}
-          />
+          <p className='  fs-20 mb-3  white-color akaya-style fs-24 text-center '>
+            LeaderBoard
+          </p>
         </div>
         <div className='d-flex flex-row justify-content-center  align-items-center mt-5'>
           <div className={`podium-container`}>
             <img src={Podium} alt='podium' className='position-relative' />
-            <img src={dummyImg} className='rank1-profile-img' alt='rank1' />
-            <img src={dummyImg} className='rank2-profile-img' alt='rank2' />
-            <img src={dummyImg} className='rank3-profile-img' alt='rank3' />
+            <div className='rank1-profile-img'>
+
+              <img src={dummyImg} className='rank-profile-img' alt='rank1' />
+              <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
+                {sortedUserDetails[0]?.name}
+              </p>
+            </div>
+            <div className='rank2-profile-img'>
+              <img src={dummyImg} className='rank-profile-img' alt='rank2' />
+              <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
+                {sortedUserDetails[1]?.name}
+              </p>
+            </div>
+            <div className='rank3-profile-img'>
+              <img src={dummyImg} className='rank-profile-img' alt='rank3' />
+              <p className=' mb-3  white-color ubuntu-regular fs-18 text-center '>
+                {sortedUserDetails[2]?.name}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -126,18 +97,18 @@ const Tracker: React.FC = () => {
         <p className='  fs-20 mb-3  black-color akaya-style fs-24 text-center '>
           Top Players List
         </p>
-        {topPlayerList.map((players, index) => (
+        {sortedUserDetails.map((players: any, index: any) => (
           <div key={index}>
             <div className='top-palyer-list-card'>
               <div className='w-50  d-flex align-items-center'>
-                <img src={players.profileimg} className='top-palyer-list-profile-img' alt='rank3' />
+                <img src={dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
                 <p className='  fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
                   #{players.rank}
                 </p>
               </div>
               <div className='d-flex flex-column w-50 align-items-start'>
-                <p className='ubuntu-medium mb-0 '>
-                  {players.playerName}
+                <p className='ubuntu-bold mb-0 '>
+                  {players.name}
                 </p>
                 <p className='E1-black-color ubuntu-regular  mb-0 '>
                   Score:{players.score}

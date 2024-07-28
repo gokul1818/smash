@@ -4,6 +4,7 @@ import { persistStore } from 'redux-persist';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 const store = configureStore({
   reducer: persistedReducer,
+  
 });
 
 export default store;

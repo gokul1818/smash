@@ -371,37 +371,44 @@ const Home: React.FC = () => {
             </div>
           </> :
           <div className='top-login-list  scrollBar-hide pb-5 '>
-            <p className='  fs-20 mb-3  black-color akaya-style text-center '>
+            <p className='  fs-24 mb-3  black-color akaya-style text-center '>
               Today Login Players
             </p>
-            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
-              const { formattedTime } = getDateFormatISO(players.lastLogin);
-              return (
-                <div key={index}>
-                  <div className='top-palyer-list-card'>
-                    <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
-                    <div className='d-flex justify-content-around align-items-center w-100 '>
-                      <div className='w-auto  d-flex align-items-start flex-column'>
-                        <p className=' mb-0 black-color akaya-style  ms-2'>
-                          {players.name}
-                        </p>
-                        <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                          {players.slot}
-                        </p>
-                      </div>
-                      <div className='w-auto  d-flex align-items-start flex-column'>
-                        <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                          {formattedTime}
-                        </p>
-                        <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                          {players.played} Match
-                        </p>
+            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
+              allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
+                const { formattedTime } = getDateFormatISO(players.lastLogin);
+                return (
+                  <div key={index}>
+                    <div className='top-palyer-list-card'>
+                      <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                      <div className='d-flex justify-content-around align-items-center w-100 '>
+                        <div className='w-auto  d-flex align-items-start flex-column'>
+                          <p className=' mb-0 black-color akaya-style  ms-2'>
+                            {players.name}
+                          </p>
+                          <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                            {players.slot}
+                          </p>
+                        </div>
+                        <div className='w-auto  d-flex align-items-start flex-column'>
+                          <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                            {formattedTime}
+                          </p>
+                          <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                            {players.todayMatchPlayed} Match
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              }) :
+              <p className='  fs-20 mb-3  black-color akaya-style text-center '>
+                No One Login Today
+              </p>
+
+            }
+
           </div>
       }
     </div >
