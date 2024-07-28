@@ -155,15 +155,12 @@
 }
 .top-login-list {
   background: #fff;
-
-  height: 200px;
   min-height: 200px;
   max-height: 500px;
   width: 100%;
   padding: 10px;
   border-top-left-radius: 50px !important;
   border-top-right-radius: 50px !important;
-  /* position: absolute; */
   overflow-y: scroll;
   border: 1px solid black;
 }

@@ -104,7 +104,8 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       readyMatch: false,
       lastLogin: new Date().toISOString(),
       billDue: new Date().toISOString(),
-      played: 0
+      played: 0,
+      todayMatchPlayed:0
 
     };
 

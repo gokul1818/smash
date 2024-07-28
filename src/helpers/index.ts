@@ -76,6 +76,43 @@ export const getDaysInMonth = (isoDateString: string): number => {
   return lastDayCurrentMonth.getDate();
 };
 
+export const getChoosePlayer = (allUserDetails: any) => {
+  // Set initial loading state
+  let loading = true;
+
+  // Function to shuffle an array
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
+  };
+
+  // Filter players who are ready for a match
+  const availablePlayers = allUserDetails.filter((x: any) => x.readyMatch === true);
+
+  // Sort players based on the number of matches played
+  const sortedPlayers = [...availablePlayers].sort((a: any, b: any) => a?.todayMatchPlayed - b?.todayMatchPlayed);
+
+  // Shuffle sorted players and take the first 4
+  const shuffledPlayers = shuffleArray(sortedPlayers).slice(0, 4);
+
+  // Update the loading state and return the result
+  // loading = false;
+
+
+  if (shuffledPlayers.length >= 4) {
+    return { loading, players: shuffledPlayers };
+  } else {
+    console.log('Not enough players available.');
+    return { loading, players: [] };
+  }
+};
+
+
+
+
 
 
 

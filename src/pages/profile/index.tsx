@@ -34,7 +34,6 @@ const Profile: React.FC = () => {
     const encryptedPhoneNumber = utf8ToBase64(to)
     const appLink = `https://smash-sigma.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
-
     const smsUri = `sms:${to}?body=${encodedAppLink}`;
     window.open(smsUri);
   };

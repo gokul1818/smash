@@ -14,69 +14,25 @@ import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
 import SubscriptionCard from '../../components/subscriptionCard';
 import { db } from '../../firebaseconfig';
-import { calculateDistance, getDateFormatISO, getDaysInMonth, getLastLoginTodayUser } from '../../helpers';
+import { calculateDistance, getChoosePlayer, getDateFormatISO, getLastLoginTodayUser } from '../../helpers';
 import { updateLocationMatch } from '../../redux/reducer/authSlice';
+import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
 import ScaningLoading from '../../components/scanLoading/scanLoading';
-import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
+
+
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
   const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
   const courtDetails = useSelector((state: RootState) => state.user.courtDetails);
   const isLocationMatched = useSelector((state: RootState) => state.auth.match);
+  const [searchloading, setSearchLoading] = useState<boolean>(false);
   const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
+  const [currentMatchPlayer, setCurrentMatchPlayer] = useState<any>([]);
   const dispatch = useDispatch()
 
-  const currentMatch = [
-    {
-      court: 1,
-      players: [
-
-      ],
-      start: false,
-      Awinner: false,
-      Bwinner: true
-
-    },
-    {
-      court: 1,
-      players: [
-        {
-          name: "rocky boy",
-          profileimg: dummyImg,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: dummyImg,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: dummyImg,
-          level: "average",
-          rank: 2,
-          score: 100
-        },
-        {
-          name: "rocky boy",
-          profileimg: dummyImg,
-          level: "beginner",
-          rank: 2,
-          score: 100
-        }
-      ],
-      start: true,
-      Awinner: true,
-      Bwinner: false
-    }
-  ]
   const data = [
     { name: 'week1', uv: 400, pv: 200 },
     { name: 'week2', uv: 300, pv: 400 },
@@ -114,8 +70,8 @@ const Home: React.FC = () => {
 
 
   const fetchLocations = async (coord: any) => {
-    const hotelRef = collection(db, "BadmintonCourt");
-    const unsubscribeHotel = onSnapshot(hotelRef, (snap) => {
+    const courtRef = collection(db, "BadmintonCourt");
+    const unsubscribecourt = onSnapshot(courtRef, (snap) => {
       const data = snap.docs.map((x) => ({
         ...x.data(),
         // courtId: x.id,
@@ -128,11 +84,12 @@ const Home: React.FC = () => {
         data[0].coordinates[1]
       );
       const isMatch = distance <= 50;
+      setCurrentMatchPlayer(data[0]?.players)
       dispatch(updateLocationMatch(isMatch))
       dispatch(updateAllCourtDetails(data))
     });
     return () => {
-      unsubscribeHotel();
+      unsubscribecourt();
     };
   };
   const updateUserReady = async () => {
@@ -206,8 +163,8 @@ const Home: React.FC = () => {
 
 
     try {
+      const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
       const docRef = doc(db, 'BadmintonCourt', courtId);
-
       // Update the document
       await updateDoc(docRef, updatedData);
       console.log('Document updated successfully');
@@ -215,7 +172,81 @@ const Home: React.FC = () => {
       console.error('Error updating document:', error);
     }
   };
-  console.log(courtDetails)
+
+
+  const handleStartNewMatch = async () => {
+    const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
+    try {
+      const docRef = doc(db, 'BadmintonCourt', courtId);
+      const { players, loading } = getChoosePlayer(allUserDetails)
+      setSearchLoading(loading);
+      setTimeout(() => {
+        setSearchLoading(false);
+
+      }, 2000)
+      const updatedData = {
+        court: 1,
+        players: players,
+        start: true,
+        Awinner: null,
+        Bwinner: null,
+        startBy: userData?.phoneNumber
+      }
+      // return
+      // Update the document
+      await updateDoc(docRef, updatedData);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  }
+
+  const updateUserScores = async (updatedScores: { userId: string; score: number }[]) => {
+    try {
+      // Iterate over each user to update their score
+      for (const user of updatedScores) {
+        const userRef = doc(db, "Users", user.userId); // Reference to the specific user document
+        await updateDoc(userRef, {
+          score: user.score
+        });
+      }
+      console.log('User scores updated successfully');
+    } catch (error) {
+      console.error('Error updating user scores:', error);
+    }
+  };
+
+  const handleWonMatch = async (teamA: boolean | true) => {
+    try {
+      const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
+      const playersToUpdate = teamA
+        ? currentMatchPlayer.slice(0, 2) // First 2 players if team A wins
+        : currentMatchPlayer.slice(2, 4); // Last 2 players if team B wins
+
+      const updatedScores = playersToUpdate.map((player: any) => ({
+        userId: player.userId,
+        score: 20 // Set score to 20
+      }));
+
+      // Update user scores
+      await updateUserScores(updatedScores);
+
+
+      const courtRef = doc(db, "BadmintonCourt", courtId);
+      const updatedData = {
+        court: 1,
+        players: [],
+        start: false,
+        startBy: ""
+      }
+      // return
+      // Update the document
+      await updateDoc(courtRef, updatedData);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  }
 
   return (
     <div className='home-container'>
@@ -308,66 +339,69 @@ const Home: React.FC = () => {
           Current Match
         </p>
         <div className='current-match-container scrollBar-hide mb-5'>
-          {courtDetails?.map((match: any, index: any) => (
-            <div className={"palyers-match-card"} key={index}
-              style={{ backgroundImage: `url(${court})` }}>
-              {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
-                <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                  <img src={x.profileimg} className='profile-img' alt='img' />
-                </div>
-              )) :
-                Array.of(1, 2).map((x, index) => (
+          {searchloading ?
+            <ScaningLoading /> :
+            courtDetails?.map((match: any, index: any) => (
+
+              <div className={"palyers-match-card"} key={index}
+                style={{ backgroundImage: `url(${court})` }}>
+                {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
                   <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                    <img src={QuestionMark} className='profile-img' alt='img' />
-                  </div>
-                ))
-              }
-              {/* <ScaningLoading /> */}
-              {Boolean(match.start) ?
-                match.players.slice(2, 4).map((x: any, index: any) => (
-                  <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
-                    <img src={x.profileimg} className='profile-img' alt="img" />
+                    <img src={x.profileimg} className='profile-img' alt='img' />
                   </div>
                 )) :
-                Array.of(3, 4).map((x, index) => (
-                  <div className='player-profile-img1' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                    <img src={QuestionMark} className='profile-img' alt='img' />
-                  </div>
-                ))}
-
-              <div className='palyers-match-btn-container'>
-                {match.start ?
-                  <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                    {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
-                      <Button
-                        label="WON"
-                        height='30px'
-                        width='80px'
-                        onClick={() => alert("sdf")}
-
-                      />
-
-                      <Button
-                        label="WON"
-                        height='30px'
-                        width='80px'
-                        onClick={() => alert("sdf")}
-
-                      />
-                    </div> : ""}
-                  </div>
-                  :
-                  <Button
-                    label="Start Match"
-                    height='30px'
-                    width='120px'
-                  />
-
+                  Array.of(1, 2).map((x, index) => (
+                    <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                      <img src={QuestionMark} className='profile-img' alt='img' />
+                    </div>
+                  ))
                 }
-              </div>
+                {Boolean(match.start) ?
+                  match.players.slice(2, 4).map((x: any, index: any) => (
+                    <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
+                      <img src={x.profileimg} className='profile-img' alt="img" />
+                    </div>
+                  )) :
+                  Array.of(3, 4).map((x, index) => (
+                    <div className='player-profile-img1' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
+                      <img src={QuestionMark} className='profile-img' alt='img' />
+                    </div>
+                  ))}
 
-            </div>
-          ))}
+                <div className='palyers-match-btn-container'>
+                  {match.start ?
+                    <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
+                      {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
+                        <Button
+                          label="WON"
+                          height='30px'
+                          width='80px'
+                          onClick={() => handleWonMatch(true)}
+
+                        />
+                        <Button
+                          label="WON"
+                          height='30px'
+                          width='80px'
+                          onClick={() => handleWonMatch(false)}
+
+                        />
+                      </div> : ""}
+                    </div>
+                    :
+                    <Button
+                      label="Start Match"
+                      height='30px'
+                      width='120px'
+                      onClick={() => handleStartNewMatch()}
+                    />
+
+                  }
+                </div>
+
+              </div>
+            ))
+          }
         </div>
       </div>
 
