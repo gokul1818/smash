@@ -308,7 +308,7 @@ const Home: React.FC = () => {
           Current Match
         </p>
         <div className='current-match-container scrollBar-hide mb-5'>
-          {courtDetails.map((match: any, index: any) => (
+          {courtDetails?.map((match: any, index: any) => (
             <div className={"palyers-match-card"} key={index}
               style={{ backgroundImage: `url(${court})` }}>
               {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
