@@ -201,15 +201,13 @@ const Home: React.FC = () => {
     }
   }
 
-  const updateUserScores = async (updatedScores: { userId: string; score: number }[]) => {
+  const updateUserScores = async (userId: string, score: number) => {
     try {
       // Iterate over each user to update their score
-      for (const user of updatedScores) {
-        const userRef = doc(db, "users", user.userId); // Reference to the specific user document
-        await updateDoc(userRef, {
-          score: user.score
-        });
-      }
+      const userRef = doc(db, "users", userId); // Reference to the specific user document
+      await updateDoc(userRef, {
+        score: score
+      });
       console.log('User scores updated successfully');
     } catch (error) {
       console.error('Error updating user scores:', error);
@@ -223,13 +221,12 @@ const Home: React.FC = () => {
         ? currentMatchPlayer.slice(0, 2) // First 2 players if team A wins
         : currentMatchPlayer.slice(2, 4); // Last 2 players if team B wins
 
-      const updatedScores = playersToUpdate.map((player: any) => ({
-        userId: player.userId,
-        score: 20 // Set score to 20
-      }));
+      console.log(playersToUpdate)
+      await Promise.all(
+        playersToUpdate.map((player: any) => updateUserScores(player.userId, player.score + 20)) // Set score to 20
+      );
 
       // Update user scores
-      await updateUserScores(updatedScores);
 
 
       const courtRef = doc(db, "BadmintonCourt", courtId);
