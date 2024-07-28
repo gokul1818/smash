@@ -10,6 +10,7 @@ import TextInput from "../../components/textInputcomponent";
 import { utf8ToBase64 } from '../../helpers';
 import { RootState } from '../../redux/store';
 import "./styles.css";
+import SubscriptionCard from "../../components/subscriptionCard";
 const Profile: React.FC = () => {
   const [to, setTo] = useState('');
   const [editProfile, setEditProfile] = useState(true)
@@ -114,52 +115,8 @@ const Profile: React.FC = () => {
         primaryBtn={false}
       /> */}
       {!userData?.isAdmin ?
-       <div className="subscription-card-conatiner my-5 text-center ">
-        <p className='akaya-style black-color text-center fs-24 mb-0'>
-          subscription
-        </p>
-        <div className='d-flex flex-wrap text-center align-tems-center justify-content-center'>
-          <p className='ubuntu-medium black-color text-center  mb-0 '>
-            You have played a total
-          </p>
-          <p className='mb-0 ms-1 dark-blue  ubuntu-bold'>
-            24 match
-          </p>
-          <p className='ubuntu-medium black-color  mb-0  '>
-            this month!
-          </p>
-        </div>
-        <ResponsiveContainer width={100} height={100}>
-          <PieChart width={100} height={100}>
-            <Pie
-              data={duedata}
-              dataKey="value"
-              cx="50%"
-              cy="50%"
-              outerRadius={50}
-              innerRadius={40}
-              fill="#8884d8"
-              label
-            >
-              {duedata.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className='d-flex subscription-card-date align-items-center'>
-          <p className='audiowide-regular black-color fs-24 mb-0  '>
-            5
-          </p>
-          <p className='audiowide-regular E4-black-color  mb-0  '>
-            /31
-          </p>
-        </div>
-      </div> :
+        <SubscriptionCard />
+        :
         <div className="add-new-user-admin my-4">
           <TextInput
             type="number"

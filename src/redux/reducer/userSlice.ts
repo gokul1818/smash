@@ -6,8 +6,12 @@ interface AuthState {
     allUserDetails: any;
 }
 
+interface AuthState {
+    courtDetails: any
+}
 const initialState: AuthState = {
-    allUserDetails: null
+    allUserDetails: null,
+    courtDetails: null,
 };
 
 
@@ -18,9 +22,12 @@ const userSlice = createSlice({
         updateAllUserDetails(state, action: PayloadAction<any>) {
             state.allUserDetails = action.payload;
         },
+        updateAllCourtDetails(state, action: PayloadAction<any>) {
+            state.courtDetails = action.payload;
+        },
     },
 });
 
 // Export action creators and reducer
-export const { updateAllUserDetails } = userSlice.actions;
+export const { updateAllUserDetails, updateAllCourtDetails } = userSlice.actions;
 export default userSlice.reducer;

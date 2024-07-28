@@ -1,7 +1,7 @@
 import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
-import { Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { fetchAllUserData, useFetchUserData } from "../../api/apiServices";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
@@ -12,14 +12,18 @@ import proBadge from "../../assets/images/proBadge.svg";
 import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
+import SubscriptionCard from '../../components/subscriptionCard';
 import { db } from '../../firebaseconfig';
 import { calculateDistance, getDateFormatISO, getDaysInMonth, getLastLoginTodayUser } from '../../helpers';
 import { updateLocationMatch } from '../../redux/reducer/authSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
+import ScaningLoading from '../../components/scanLoading/scanLoading';
+import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
 const Home: React.FC = () => {
   const userData = useSelector((state: RootState) => state.auth.user);
   const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
+  const courtDetails = useSelector((state: RootState) => state.user.courtDetails);
   const isLocationMatched = useSelector((state: RootState) => state.auth.match);
   const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
@@ -36,7 +40,6 @@ const Home: React.FC = () => {
       Bwinner: true
 
     },
-
     {
       court: 1,
       players: [
@@ -72,9 +75,7 @@ const Home: React.FC = () => {
       start: true,
       Awinner: true,
       Bwinner: false
-    },
-
-
+    }
   ]
   const data = [
     { name: 'week1', uv: 400, pv: 200 },
@@ -82,15 +83,6 @@ const Home: React.FC = () => {
     { name: 'week3', uv: 100, pv: 10 },
     { name: 'week4', uv: 300, pv: 200 },
     { name: 'week5', uv: 200, pv: 300 },
-  ];
-  const COLORS = ["#1355D2", '#090335'];;
-
-  const { formattedDateOnly } = getDateFormatISO(userData.billDue)
-  const todayDate = new Date().getDate()
-  const pendingDayToBill = Number(getDaysInMonth(userData.billDue)) - Math.abs(Number(formattedDateOnly) - Number(todayDate))
-  const duedata = [
-    { name: 'Month', value: Number(getDaysInMonth(userData.billDue) - pendingDayToBill) },
-    { name: 'Bill Due Date ', value: pendingDayToBill }
   ];
 
   const { loading, error } = useFetchUserData(userId);
@@ -126,6 +118,8 @@ const Home: React.FC = () => {
     const unsubscribeHotel = onSnapshot(hotelRef, (snap) => {
       const data = snap.docs.map((x) => ({
         ...x.data(),
+        // courtId: x.id,
+
       }));
       const distance = calculateDistance(
         coord[0],
@@ -135,6 +129,7 @@ const Home: React.FC = () => {
       );
       const isMatch = distance <= 50;
       dispatch(updateLocationMatch(isMatch))
+      dispatch(updateAllCourtDetails(data))
     });
     return () => {
       unsubscribeHotel();
@@ -165,6 +160,63 @@ const Home: React.FC = () => {
   useEffect(() => {
     allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true)
   }, [allUserDetails])
+
+
+  const updateCourt = async () => {
+    const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
+
+    // New data to update
+    const updatedData = {
+
+      court: 1,
+      players: [
+        {
+          name: "rocky boy",
+          profileimg: dummyImg,
+          level: "average",
+          rank: 2,
+          score: 100
+        },
+        {
+          name: "rocky boy",
+          profileimg: dummyImg,
+          level: "average",
+          rank: 2,
+          score: 100
+        },
+        {
+          name: "rocky boy",
+          profileimg: dummyImg,
+          level: "average",
+          rank: 2,
+          score: 100
+        },
+        {
+          name: "rocky boy",
+          profileimg: dummyImg,
+          level: "beginner",
+          rank: 2,
+          score: 100
+        }
+      ],
+      start: true,
+      Awinner: true,
+      Bwinner: false
+    }
+
+
+    try {
+      const docRef = doc(db, 'BadmintonCourt', courtId);
+
+      // Update the document
+      await updateDoc(docRef, updatedData);
+      console.log('Document updated successfully');
+    } catch (error) {
+      console.error('Error updating document:', error);
+    }
+  };
+  console.log(courtDetails)
+
   return (
     <div className='home-container'>
       <div className='p-4'>
@@ -177,6 +229,14 @@ const Home: React.FC = () => {
               {userData?.name}
             </p>
           </div>
+          <Button
+            label={userData.readyMatch ? "Exit Match" : "Ready "}
+            height='30px'
+            width='120px'
+            secondaryBtn={true}
+            primaryBtn={false}
+            onClick={() => updateCourt()}
+          />
           <div className='position-relative'>
             <img src={streaks} alt='streaks' />
             <div className='streaks-label'>
@@ -207,7 +267,6 @@ const Home: React.FC = () => {
           Avaliable Players
         </p>
         <div className='avaliable-players-container scrollBar-hide'>
-
           {allUserDetails?.filter((x: any) => x.readyMatch == true).length > 0 ?
             allUserDetails?.filter((x: any) => x.readyMatch == true).map((playersData: any, index: number) => (
               <div className={
@@ -249,11 +308,10 @@ const Home: React.FC = () => {
           Current Match
         </p>
         <div className='current-match-container scrollBar-hide mb-5'>
-          {currentMatch.map((match, index) => (
+          {courtDetails.map((match: any, index: any) => (
             <div className={"palyers-match-card"} key={index}
               style={{ backgroundImage: `url(${court})` }}>
-
-              {Boolean(match.start) ? match.players.slice(0, 2).map((x, index) => (
+              {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
                 <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
                   <img src={x.profileimg} className='profile-img' alt='img' />
                 </div>
@@ -264,8 +322,9 @@ const Home: React.FC = () => {
                   </div>
                 ))
               }
+              {/* <ScaningLoading /> */}
               {Boolean(match.start) ?
-                match.players.slice(2, 4).map((x, index) => (
+                match.players.slice(2, 4).map((x: any, index: any) => (
                   <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
                     <img src={x.profileimg} className='profile-img' alt="img" />
                   </div>
@@ -279,19 +338,23 @@ const Home: React.FC = () => {
               <div className='palyers-match-btn-container'>
                 {match.start ?
                   <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                    <div className='d-flex justify-content-around w-100'  >
+                    {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
                       <Button
                         label="WON"
                         height='30px'
                         width='80px'
+                        onClick={() => alert("sdf")}
+
                       />
 
                       <Button
                         label="WON"
                         height='30px'
                         width='80px'
+                        onClick={() => alert("sdf")}
+
                       />
-                    </div>
+                    </div> : ""}
                   </div>
                   :
                   <Button
@@ -320,55 +383,9 @@ const Home: React.FC = () => {
                 <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                {/* <Tooltip /> */}
               </LineChart>
             </ResponsiveContainer>
-            <div className="subscription-card-conatiner    text-center ">
-              <p className='akaya-style black-color text-center fs-24 mb-0'>
-                subscription
-              </p>
-              <div className='d-flex flex-wrap text-center align-tems-center justify-content-center'>
-                <p className='ubuntu-medium black-color text-center  mb-0 '>
-                  You have played a total
-                </p>
-                <p className='mb-0 ms-1 dark-blue  ubuntu-bold'>
-                  {userData?.played} match for
-                </p>
-                <p className='ubuntu-medium black-color  mb-0  '>
-                  this month!
-                </p>
-              </div>
-              <ResponsiveContainer width={100} height={100}>
-                <PieChart width={100} height={100}>
-                  <Pie
-                    data={duedata}
-                    dataKey="value"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={50}
-                    innerRadius={40}
-                    fill="#8884d8"
-                    label
-                  >
-                    {duedata.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className='d-flex subscription-card-date align-items-center'>
-                <p className='audiowide-regular black-color fs-24 mb-0  '>
-                  {pendingDayToBill}
-                </p>
-                <p className='audiowide-regular E4-black-color  mb-0  '>
-                  /{getDaysInMonth(userData?.billDue)}
-                </p>
-              </div>
-            </div>
+            <SubscriptionCard />
           </> :
           <div className='top-login-list  scrollBar-hide pb-5 '>
             <p className='  fs-24 mb-3  black-color akaya-style text-center '>
