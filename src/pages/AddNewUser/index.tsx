@@ -101,11 +101,12 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       timestamp: new Date().toISOString(),
       password: encryptedPassword,
       streaks: 0,
+      score: 0,
       readyMatch: false,
       lastLogin: new Date().toISOString(),
       billDue: new Date().toISOString(),
       played: 0,
-      todayMatchPlayed:0
+      todayMatchPlayed: 0
 
     };
 

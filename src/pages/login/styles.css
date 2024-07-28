@@ -1,7 +1,7 @@
 .login-container {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
   max-height: 100%;
@@ -10,7 +10,7 @@
 }
 
 .smash {
-  font-size: 40px;
+  font-size: 30px;
   font-family: "Audiowide", sans-serif;
   text-align: center;
 }

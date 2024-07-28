@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import player from "../../assets/images/player.png";
+import smashLogo from "../../assets/images/smashLogo.svg";
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
@@ -65,8 +65,8 @@ const Login: React.FC<LoginProps> = () => {
   return (
     <div className="login-container p-3">
       <div className="mb-4">
-        <img src={player} alt="login-logo" className="login-logo" />
-        <h1 className="smash w-100 px-4">Smash Badminton</h1>
+        <img src={smashLogo} alt="login-logo" className="login-logo" />
+        <h1 className="smash w-100 px-4">Login</h1>
       </div>
       <div className="px-3">
         <TextInput
