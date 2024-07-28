@@ -221,7 +221,6 @@ const Home: React.FC = () => {
         ? currentMatchPlayer.slice(0, 2) // First 2 players if team A wins
         : currentMatchPlayer.slice(2, 4); // Last 2 players if team B wins
 
-      console.log(playersToUpdate)
       await Promise.all(
         playersToUpdate.map((player: any) => updateUserScores(player.userId, player.score + 20)) // Set score to 20
       );
