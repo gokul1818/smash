@@ -205,7 +205,7 @@ const Home: React.FC = () => {
     try {
       // Iterate over each user to update their score
       for (const user of updatedScores) {
-        const userRef = doc(db, "Users", user.userId); // Reference to the specific user document
+        const userRef = doc(db, "users", user.userId); // Reference to the specific user document
         await updateDoc(userRef, {
           score: user.score
         });
