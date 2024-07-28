@@ -1,0 +1,90 @@
+.upload-document-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.upload-label {
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  position: relative;
+}
+
+.upload-label:hover {
+  border-color: #888;
+}
+
+.upload-label input {
+  display: none;
+}
+
+.file-display {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.selected-file-name {
+  font-size: 14px;
+  color: #555;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #f00;
+}
+
+.loading-indicator {
+  font-size: 14px;
+  color: #555;
+  margin-top: 8px;
+}
+
+.field {
+  border-color: transparent;
+}
+.camera {
+  height: 65px;
+  width: 65px;
+}
+.upload-document-field-row{
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  justify-content: center;
+  width: 60%;
+  align-self: center;
+}
+.preview{
+  height: 70px;
+  width:  70px;
+  justify-content: center;
+}
+.close{
+  height: 13px;
+  width:13px;
+  position: absolute;
+  top:5px;
+  right:5px
+}

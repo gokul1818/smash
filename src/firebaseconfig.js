@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyBHzg-LzvMPvktxxmYzaGL0veBVeTg2ZSw",
   authDomain: "smash-badminton-1312.firebaseapp.com",
@@ -13,5 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Initialize Firestore if using Firestore
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-export {  db };
+export {  db ,storage};
