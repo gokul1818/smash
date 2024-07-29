@@ -42,6 +42,9 @@
   left: 16px;
   width: 68px;
   height: 68px;
+  border-radius: 50%;
+  object-fit: contain;
+
 }
 .unavaliable-players-card {
   background-color: #616161;
@@ -125,6 +128,7 @@
   width: 50px;
   height: 50px;
   object-fit: contain;
+  border-radius: 50%;
 }
 
 .palyers-match-btn-container {

@@ -50,6 +50,8 @@
 .rank-profile-img {
   width: 70px;
   height: 70px;
+  border-radius: 50%;
+  object-fit: contain;
 }
 .top-palyer-list-card {
   width: 100%;
@@ -79,6 +81,9 @@
 .top-palyer-list-profile-img {
   width: 70px;
   height: 70px;
+  border-radius: 50%;
+  object-fit: contain;
+
 }
 .first-half {
   opacity: 1;

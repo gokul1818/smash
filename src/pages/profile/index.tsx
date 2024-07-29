@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 // redux
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 // firebase 
@@ -22,35 +22,27 @@ import { utf8ToBase64 } from "../../helpers";
 // images
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
-import dummyImg from "../../assets/images/dummyImg.svg";
 import edit from "../../assets/images/edit.png";
 import proBadge from "../../assets/images/proBadge.svg";
 
 // styles
+import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
 
 // default values
-const COLORS = ["#090335", "#1355D2"];
 
 const Profile: React.FC = () => {
   // selector
   const userData = useSelector((state: RootState) => state.auth.user);
   // states
+  const dispatch = useDispatch()
   const [to, setTo] = useState("");
   const [editProfile, setEditProfile] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [downloadURL, setDownloadURL] = useState<string | null>(null);
   // -------------------- FUNCTIONALITIES -------------------- //
-  const getCurrentMonthDays = () => {
-    const currentDate = new Date(); // Get current date object
-    const currentMonth = currentDate.getMonth(); // Get current month (0-indexed)
-    const currentYear = currentDate.getFullYear(); // Get current year
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-    return lastDayOfMonth;
-  };
 
   const sendSMS = () => {
     const encryptedPhoneNumber = utf8ToBase64(to);
@@ -60,41 +52,23 @@ const Profile: React.FC = () => {
     window.open(smsUri);
   };
 
-  const updateUserReady = async () => {
-    const userDocRef = doc(db, "users", userData?.userId);
-
-    try {
-      await updateDoc(userDocRef, {
-        profilePic: "",
-      });
-    } catch (error) {
-      console.error("Error updating user readiness:", error);
-    }
-  };
-
-  const duedata = [
-    { name: "Month", value: getCurrentMonthDays() - 5 },
-    { name: "Bill Due Date ", value: 5 },
-  ];
-
   const handleUpdate = async () => {
     if (selectedFile) {
       setIsLoading(true);
       try {
         // Create a storage reference
         const storageRef = ref(storage, `uploads/${selectedFile.name}`);
-        
+
         // Upload the file
         const snapshot = await uploadBytes(storageRef, selectedFile);
 
         // Get the download URL
         const url = await getDownloadURL(snapshot.ref);
-        setDownloadURL(url);
 
         // Update the user profile picture URL in Firestore
         const userDocRef = doc(db, "users", userData?.userId);
         await updateDoc(userDocRef, { profilePic: url });
-
+        dispatch(login({ ...userData, profilePic: url }));
         setIsLoading(false);
         setIsModalOpen(false);
       } catch (error) {
@@ -104,29 +78,29 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleFileSelect = () => {};
+  const handleFileSelect = () => { };
   // -------------------- RENDER UI -------------------- //
   return (
     <div className="profile-container p-4 mb-5">
       <div className=" position-relative">
         <img
           src={
-            "pro" === "pro"
+            userData?.level === "Pro"
               ? proBadge
-              : "average" === "average"
-              ? averageBadge
-              : beginnerBadge
+              : userData?.level === "Average"
+                ? averageBadge
+                : beginnerBadge
           }
           alt="badge"
         />
-        <img src={dummyImg} className="avaliable-profile-car-img" alt="img" />
+        <img src={userData?.profilePic} className="avaliable-profile-car-img" alt="img" />
+        <img
+          src={edit}
+          alt="edit"
+          className="profile-edit-icon"
+          onClick={() => setIsModalOpen(true)}
+        />
       </div>
-      <img
-        src={edit}
-        alt="edit"
-        className="edit"
-        onClick={() => setIsModalOpen(true)}
-      />
       <p className="profile-label fs-24 primarygrey-color mt-3">
         {userData?.name}
       </p>
@@ -139,7 +113,7 @@ const Profile: React.FC = () => {
           <div className="w-50">
             <TextInput
               type="text"
-              onChange={() => {}}
+              onChange={() => { }}
               value={userData?.name}
               primary={false}
               disabled={editProfile}
@@ -154,7 +128,7 @@ const Profile: React.FC = () => {
           <div className="w-50">
             <TextInput
               type="number"
-              onChange={() => {}}
+              onChange={() => { }}
               value={userData?.phoneNumber}
               primary={false}
               className="pb-3 "
@@ -167,7 +141,7 @@ const Profile: React.FC = () => {
           <div className="w-50">
             <TextInput
               type="text"
-              onChange={() => {}}
+              onChange={() => { }}
               value={userData?.bloodGroup}
               primary={false}
               disabled={editProfile}

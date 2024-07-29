@@ -129,28 +129,28 @@ const Home: React.FC = () => {
       players: [
         {
           name: "rocky boy",
-          profileimg: dummyImg,
+          profilePic: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: dummyImg,
+          profilePic: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: dummyImg,
+          profilePic: dummyImg,
           level: "average",
           rank: 2,
           score: 100
         },
         {
           name: "rocky boy",
-          profileimg: dummyImg,
+          profilePic: dummyImg,
           level: "beginner",
           rank: 2,
           score: 100
@@ -184,17 +184,20 @@ const Home: React.FC = () => {
         setSearchLoading(false);
 
       }, 2000)
-      const updatedData = {
-        court: 1,
-        players: players,
-        start: true,
-        Awinner: null,
-        Bwinner: null,
-        startBy: userData?.phoneNumber
+      if (players.length) {
+
+        const updatedData = {
+          court: 1,
+          players: players,
+          start: true,
+          Awinner: null,
+          Bwinner: null,
+          startBy: userData?.phoneNumber
+        }
+        // return
+        // Update the document
+        await updateDoc(docRef, updatedData);
       }
-      // return
-      // Update the document
-      await updateDoc(docRef, updatedData);
       console.log('Document updated successfully');
     } catch (error) {
       console.error('Error updating document:', error);
@@ -214,13 +217,13 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleWonMatch = async (teamA: boolean | true) => {
+  const handleWonMatch = async (teamA: boolean) => {
     try {
       const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
-      const playersToUpdate = teamA
+      const playersToUpdate = teamA == true
         ? currentMatchPlayer.slice(0, 2) // First 2 players if team A wins
         : currentMatchPlayer.slice(2, 4); // Last 2 players if team B wins
-
+      console.log(playersToUpdate, teamA)
       await Promise.all(
         playersToUpdate.map((player: any) => updateUserScores(player.userId, player.score + 20)) // Set score to 20
       );
@@ -295,7 +298,7 @@ const Home: React.FC = () => {
               } key={index} >
                 <div className='w-50 position-relative'>
                   <img src={playersData.level === "Pro" ? proBadge : playersData.level === "Average" ? averageBadge : beginnerBadge} alt="badge" />
-                  <img src={playersData.profileimg || dummyImg} className='avaliable-profile-car-img' alt="img" />
+                  <img src={playersData.profilePic || dummyImg} className='avaliable-profile-car-img' alt="img" />
                 </div>
                 <div className='w-50 d-flex flex-column align-items-start justify-content-around h-100'>
                   <p className='audiowide-regular fs-20 text-uppercase fs-bold black-color mb-2'>{playersData.name}</p>
@@ -344,7 +347,7 @@ const Home: React.FC = () => {
 
                     {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
                       <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
-                        <img src={x.profileimg} className='profile-img' alt='img' />
+                        <img src={x.profilePic} className='profile-img' alt='img' />
                       </div>
                     )) :
                       Array.of(1, 2).map((x, index) => (
@@ -356,7 +359,7 @@ const Home: React.FC = () => {
                     {Boolean(match.start) ?
                       match.players.slice(2, 4).map((x: any, index: any) => (
                         <div className='player-profile-img1' key={index} style={{ top: index === 0 ? "29px" : "94px" }}>
-                          <img src={x.profileimg} className='profile-img' alt="img" />
+                          <img src={x.profilePic} className='profile-img' alt="img" />
                         </div>
                       )) :
                       Array.of(3, 4).map((x, index) => (
@@ -373,14 +376,14 @@ const Home: React.FC = () => {
                               label="WON"
                               height='30px'
                               width='80px'
-                              onClick={() => handleWonMatch(true)}
+                              onClick={() => handleWonMatch(false)}
 
                             />
                             <Button
                               label="WON"
                               height='30px'
                               width='80px'
-                              onClick={() => handleWonMatch(false)}
+                              onClick={() => handleWonMatch(true)}
 
                             />
                           </div> : ""}
@@ -403,65 +406,65 @@ const Home: React.FC = () => {
             ))
           }
         </div>
+      </div >
 
-        {
-          !userData?.isAdmin ?
-            <>
-              <p className='ubuntu-regular white-color text-center  my-3'>
-                Your Performance
-              </p>
-              <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
-                <LineChart data={data}>
-                  <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
-                  <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                </LineChart>
-              </ResponsiveContainer>
-              <SubscriptionCard />
-            </> :
-            <div className='top-login-list  scrollBar-hide pb-5 '>
-              <p className='  fs-20 mb-3  black-color audiowide-regular text-center '>
-                Today Login Players
-              </p>
-              {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
-                allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
-                  const { formattedTime } = getDateFormatISO(players.lastLogin);
-                  return (
-                    <div key={index}>
-                      <div className='top-palyer-list-card'>
-                        <img src={players.profileimg || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
-                        <div className='d-flex justify-content-around align-items-center w-100 '>
-                          <div className='w-auto  d-flex align-items-start flex-column'>
-                            <p className=' mb-0 black-color ubuntu-regular  ms-2'>
-                              {players.name}
-                            </p>
-                            <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
-                              {players.slot}
-                            </p>
-                          </div>
-                          <div className='w-auto  d-flex align-items-start flex-column'>
-                            <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
-                              {formattedTime}
-                            </p>
-                            <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
-                              {players.todayMatchPlayed} Match
-                            </p>
-                          </div>
+      {
+        !userData?.isAdmin ?
+          <>
+            <p className='ubuntu-regular white-color text-center  my-3'>
+              Your Performance
+            </p>
+            <ResponsiveContainer width="100%" height={400} className={"mb-5"}>
+              <LineChart data={data}>
+                <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeDasharray="5 5" />
+                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                <XAxis dataKey="name" />
+                <YAxis />
+              </LineChart>
+            </ResponsiveContainer>
+            <SubscriptionCard />
+          </> :
+          <div className='top-login-list  scrollBar-hide pb-5 '>
+            <p className='  fs-20 mb-3  black-color audiowide-regular text-center '>
+              Today Login Players
+            </p>
+            {allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).length ?
+              allUserDetails?.filter((x: any) => getLastLoginTodayUser(x.lastLogin) == true).map((players: any, index: number) => {
+                const { formattedTime } = getDateFormatISO(players.lastLogin);
+                return (
+                  <div key={index}>
+                    <div className='top-palyer-list-card'>
+                      <img src={players.profilePic || dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                      <div className='d-flex justify-content-around align-items-center w-100 '>
+                        <div className='w-auto  d-flex align-items-start flex-column'>
+                          <p className=' mb-0 black-color ubuntu-regular  ms-2'>
+                            {players.name}
+                          </p>
+                          <p className=' mb-0 fs-18  ubuntu-medium E4-black-color  ms-2'>
+                            {players.slot}
+                          </p>
+                        </div>
+                        <div className='w-auto  d-flex align-items-start flex-column'>
+                          <p className=' mb-2  E4-black-color ubuntu-medium px-2'>
+                            {formattedTime}
+                          </p>
+                          <p className=' mb-0  E4-black-color ubuntu-medium ms-2'>
+                            {players.todayMatchPlayed} Match
+                          </p>
                         </div>
                       </div>
                     </div>
-                  )
-                }) :
-                <p className='  fs-20 mb-3  black-color ubuntu-regular text-center '>
-                  No One Login Today
-                </p>
+                  </div>
+                )
+              }) :
+              <p className='  fs-20 mb-3  black-color ubuntu-regular text-center '>
+                No One Login Today
+              </p>
 
-              }
+            }
 
-            </div>
-        }
-      </div >
+          </div>
+      }
     </div >
 
   )

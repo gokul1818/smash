@@ -11,7 +11,13 @@
   font-family: "Akaya Telivigala", system-ui;
   font-size: 22px;
 }
-
+.profile-edit-icon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  bottom: 0px;
+  left:80px;
+}
 .add-new-user-admin {
   width: 350px;
   height: 270px;
@@ -25,7 +31,4 @@
   padding: 10px;
 }
 
-.edit {
-  width: 23px;
-  height: 23px;
-}
+

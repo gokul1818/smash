@@ -72,19 +72,19 @@ const Tracker: React.FC = () => {
             <img src={Podium} alt='podium' className='position-relative' />
             <div className='rank1-profile-img'>
 
-              <img src={dummyImg} className='rank-profile-img' alt='rank1' />
+              <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank1' />
               <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[0]?.name}
               </p>
             </div>
             <div className='rank2-profile-img'>
-              <img src={dummyImg} className='rank-profile-img' alt='rank2' />
+              <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank2' />
               <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[1]?.name}
               </p>
             </div>
             <div className='rank3-profile-img'>
-              <img src={dummyImg} className='rank-profile-img' alt='rank3' />
+              <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank3' />
               <p className=' mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[2]?.name}
               </p>
@@ -101,9 +101,9 @@ const Tracker: React.FC = () => {
           <div key={index}>
             <div className='top-palyer-list-card'>
               <div className='w-50  d-flex align-items-center'>
-                <img src={dummyImg} className='top-palyer-list-profile-img' alt='rank3' />
+                <img src={players.profilePic} className='top-palyer-list-profile-img' alt='rank3' />
                 <p className='  fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
-                  #{index+1}
+                  #{index + 1}
                 </p>
               </div>
               <div className='d-flex flex-column w-50 align-items-start'>
