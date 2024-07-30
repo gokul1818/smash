@@ -1,6 +1,6 @@
-import React from 'react';
-import "./styles.css"
-import { error } from 'console';
+import React, { useCallback } from 'react';
+import { debounce } from '../../helpers';
+import "./styles.css";
 interface ButtonProps {
   onClick?: () => void;
   label: string;
@@ -11,6 +11,7 @@ interface ButtonProps {
   primaryBtn?: boolean;
   secondaryBtn?: boolean;
   type?: any;
+  debounceDelay?: number;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -23,10 +24,17 @@ const Button: React.FC<ButtonProps> = ({
   primaryBtn = true,
   secondaryBtn = false,
   type,
+  debounceDelay = 300,
 }) => {
+  const debouncedOnClick = useCallback(
+    debounce(() => {
+      if (onClick) onClick();
+    }, debounceDelay),
+    [onClick, debounceDelay]
+  );
   return (
     <button
-      onClick={onClick}
+      onClick={debouncedOnClick}
       className={primaryBtn ?
         `primary-btn white-color bg-E1-black-color  ${className}` :
         secondaryBtn ?

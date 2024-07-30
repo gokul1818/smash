@@ -71,20 +71,19 @@ const Tracker: React.FC = () => {
           <div className={`podium-container`}>
             <img src={Podium} alt='podium' className='position-relative' />
             <div className='rank1-profile-img'>
-
               <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank1' />
               <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[0]?.name}
               </p>
             </div>
             <div className='rank2-profile-img'>
-              <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank2' />
+              <img src={sortedUserDetails[1]?.profilePic} className='rank-profile-img' alt='rank2' />
               <p className='  mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[1]?.name}
               </p>
             </div>
             <div className='rank3-profile-img'>
-              <img src={sortedUserDetails[0]?.profilePic} className='rank-profile-img' alt='rank3' />
+              <img src={sortedUserDetails[2]?.profilePic} className='rank-profile-img' alt='rank3' />
               <p className=' mb-3  white-color ubuntu-regular fs-18 text-center '>
                 {sortedUserDetails[2]?.name}
               </p>
@@ -99,10 +98,10 @@ const Tracker: React.FC = () => {
         </p>
         {sortedUserDetails.map((players: any, index: any) => (
           <div key={index}>
-            <div className='top-palyer-list-card'>
+            <div className={`top-palyer-list-card  ${index == 0 ? "rank1card" : index == 1 ? "rank2card" : index == 2 ? "rank3card" : ""}`}>
               <div className='w-50  d-flex align-items-center'>
                 <img src={players.profilePic} className='top-palyer-list-profile-img' alt='rank3' />
-                <p className='  fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
+                <p className='fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
                   #{index + 1}
                 </p>
               </div>
@@ -118,7 +117,7 @@ const Tracker: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -20,6 +20,7 @@ import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
 import ScaningLoading from '../../components/scanLoading/scanLoading';
+import { toast } from 'react-toastify';
 
 
 const Home: React.FC = () => {
@@ -178,7 +179,8 @@ const Home: React.FC = () => {
     const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
     try {
       const docRef = doc(db, 'BadmintonCourt', courtId);
-      const { players, loading } = getChoosePlayer(allUserDetails)
+      const { players, loading, err } = getChoosePlayer(allUserDetails)
+      toast.error(err);
       setSearchLoading(loading);
       setTimeout(() => {
         setSearchLoading(false);
@@ -209,7 +211,8 @@ const Home: React.FC = () => {
       // Iterate over each user to update their score
       const userRef = doc(db, "users", userId); // Reference to the specific user document
       await updateDoc(userRef, {
-        score: score
+        score: score,
+        todayMatchPlayed: userData?.todayMatchPlayed + 1
       });
       console.log('User scores updated successfully');
     } catch (error) {
@@ -371,7 +374,7 @@ const Home: React.FC = () => {
                     <div className='palyers-match-btn-container'>
                       {match.start ?
                         <div className='d-flex flex-column justify-content-center align-items-center  w-100'>
-                          {userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
+                          {userData?.isAdmin || userData?.phoneNumber == match.startBy == true ? <div className='d-flex justify-content-around w-100'  >
                             <Button
                               label="WON"
                               height='30px'

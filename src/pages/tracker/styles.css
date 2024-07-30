@@ -94,3 +94,13 @@
 .first-half.fade-in {
   opacity: 0.2;
 }
+
+.rank1card{
+  background-color: #ffdd85;
+}
+.rank2card{
+  background-color: #af98f1;
+}
+.rank3card{
+  background-color: #9cefd6;
+}

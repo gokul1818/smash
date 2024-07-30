@@ -106,12 +106,24 @@ export const getChoosePlayer = (allUserDetails: any) => {
     return { loading, players: shuffledPlayers };
   } else {
     console.log('Not enough players available.');
-    return { loading, players: [] };
+
+    return { loading, players: [], err: "Not enough players available to start match" };
   }
 };
 
 
-
+export function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout;
+  return function (...args: Parameters<T>) {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 
 
