@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
   primaryBtn = true,
   secondaryBtn = false,
   type,
-  debounceDelay = 300,
+  debounceDelay = 500,
 }) => {
   const debouncedOnClick = useCallback(
     debounce(() => {

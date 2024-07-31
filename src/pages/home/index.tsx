@@ -11,6 +11,7 @@ import dummyImg from "../../assets/images/dummyImg.svg";
 import proBadge from "../../assets/images/proBadge.svg";
 import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";
+import reset from "../../assets/images/resetIcon.svg";
 import Button from '../../components/buttonComponent';
 import SubscriptionCard from '../../components/subscriptionCard';
 import { db } from '../../firebaseconfig';
@@ -22,8 +23,17 @@ import "./styles.css";
 import ScaningLoading from '../../components/scanLoading/scanLoading';
 import { toast } from 'react-toastify';
 
+const convertToMillis = (startTime: any) => {
+  return startTime.seconds * 1000 + startTime.nanoseconds / 1e6;
+};
+const calculateDuration = (startTime: any) => {
+  const startMillis = convertToMillis(startTime);
+  const nowMillis = Date.now();
+  return nowMillis - startMillis;
+}
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch()
   const userData = useSelector((state: RootState) => state.auth.user);
   const allUserDetails = useSelector((state: RootState) => state.user.allUserDetails);
   const courtDetails = useSelector((state: RootState) => state.user.courtDetails);
@@ -32,7 +42,15 @@ const Home: React.FC = () => {
   const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
   const [currentMatchPlayer, setCurrentMatchPlayer] = useState<any>([]);
-  const dispatch = useDispatch()
+
+
+
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  useEffect(() => {
+    const durationMillis = 20 * 60 * 1000; // 20 minutes in milliseconds
+    const initialTimeRemaining = durationMillis - calculateDuration(courtDetails[0]?.startTime);
+    setTimeRemaining(Math.max(initialTimeRemaining, 0))
+  }, [courtDetails])
 
   const data = [
     { name: 'week1', uv: 400, pv: 200 },
@@ -43,9 +61,31 @@ const Home: React.FC = () => {
   ];
 
   const { loading, error } = useFetchUserData(userId);
+
   useEffect(() => {
     fetchAllUserData(dispatch)
   }, [userId])
+
+
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimeRemaining(prevTime => {
+        const newTime = prevTime - 1000;
+
+        // Stop the timer when it reaches zero
+        if (newTime <= 0) {
+          clearInterval(timerInterval);
+          return 0;
+        }
+
+        return newTime;
+      });
+    }, 1000);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(timerInterval);
+  }, [courtDetails]);
 
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(
@@ -93,6 +133,7 @@ const Home: React.FC = () => {
       unsubscribecourt();
     };
   };
+  
   const updateUserReady = async () => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
@@ -184,8 +225,7 @@ const Home: React.FC = () => {
       setSearchLoading(loading);
       setTimeout(() => {
         setSearchLoading(false);
-
-      }, 2000)
+      }, 1000)
       if (players.length) {
 
         const updatedData = {
@@ -194,7 +234,8 @@ const Home: React.FC = () => {
           start: true,
           Awinner: null,
           Bwinner: null,
-          startBy: userData?.phoneNumber
+          startBy: userData?.phoneNumber,
+          startTime: new Date()
         }
         // return
         // Update the document
@@ -239,7 +280,8 @@ const Home: React.FC = () => {
         court: 1,
         players: [],
         start: false,
-        startBy: ""
+        startBy: "",
+        startTime: ""
       }
       // return
       // Update the document
@@ -250,6 +292,29 @@ const Home: React.FC = () => {
     }
   }
 
+  const handleReset = async () => {
+    const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
+    const courtRef = doc(db, "BadmintonCourt", courtId);
+    const updatedData = {
+      court: 1,
+      players: [],
+      start: false,
+      startBy: "",
+      startTime: ""
+    }
+    await updateDoc(courtRef, updatedData);
+  }
+
+  const formatTime = (ms: any) => {
+    const minutes = Math.floor(ms / (60 * 1000));
+    const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+    if (minutes == 0 && seconds == 0) {
+      console.log(minutes, seconds)
+      handleReset()
+    }
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+  };
   return (
     <div className='home-container'>
       <div className='p-4'>
@@ -342,12 +407,11 @@ const Home: React.FC = () => {
 
                 {searchloading ?
                   <div className='w-100 d-flex align-items-center justify-content-center mt-3'>
-
                     <ScaningLoading />
                   </div>
                   :
                   <div>
-
+                    {match.start ? <div className=' current-Match-Timer fs-22  white-color'>{formatTime(timeRemaining)}</div> : ""}
                     {Boolean(match.start) ? match.players.slice(0, 2).map((x: any, index: any) => (
                       <div className='player-profile-img' style={{ top: index === 0 ? "29px" : "94px" }} key={index}>
                         <img src={x.profilePic} className='profile-img' alt='img' />
@@ -381,6 +445,13 @@ const Home: React.FC = () => {
                               width='80px'
                               onClick={() => handleWonMatch(false)}
 
+                            />
+                            <img
+                              src={reset}
+                              height='40px'
+                              width='40px'
+                              alt='reset'
+                              onClick={() => handleReset()}
                             />
                             <Button
                               label="WON"
