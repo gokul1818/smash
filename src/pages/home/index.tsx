@@ -28,7 +28,7 @@ interface StartTime {
   nanoseconds: number;
 }
 const convertToMillis = (startTime: StartTime) => {
-  return startTime.seconds * 1000 + startTime.nanoseconds / 1e6;
+  return startTime?.seconds * 1000 + startTime?.nanoseconds / 1e6;
 };
 const calculateDuration = (startTime: StartTime) => {
   const startMillis = convertToMillis(startTime);
