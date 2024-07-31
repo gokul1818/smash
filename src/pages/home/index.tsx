@@ -23,10 +23,14 @@ import "./styles.css";
 import ScaningLoading from '../../components/scanLoading/scanLoading';
 import { toast } from 'react-toastify';
 
-const convertToMillis = (startTime: any) => {
+interface StartTime {
+  seconds: number;
+  nanoseconds: number;
+}
+const convertToMillis = (startTime: StartTime) => {
   return startTime.seconds * 1000 + startTime.nanoseconds / 1e6;
 };
-const calculateDuration = (startTime: any) => {
+const calculateDuration = (startTime: StartTime) => {
   const startMillis = convertToMillis(startTime);
   const nowMillis = Date.now();
   return nowMillis - startMillis;
