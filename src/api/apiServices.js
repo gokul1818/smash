@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseconfig";
 import { updateAllUserDetails } from "../redux/reducer/userSlice";
 import { useEffect, useState } from "react";
@@ -78,4 +78,27 @@ export const useFetchUserData = (userId) => {
   }, [userId, dispatch]);
 
   return { userData, loading, error };
+};
+
+export const updateUserScores = async (userId, score, userData) => {
+  try {
+    // Reference to the specific user document
+    const userRef = doc(db, "users", userId);
+
+    // Safeguard to handle undefined or null values in userData
+    const todayMatchPlayed = userData?.todayMatchPlayed ?? 0;
+    const played = userData?.played ?? 0;
+
+    await updateDoc(userRef, {
+      score: score,
+      todayMatchPlayed: todayMatchPlayed + 1,
+      played: played + 1,
+      lastMatchPlayed: new Date().toISOString(),
+    });
+
+    console.log("User scores updated successfully");
+  } catch (error) {
+    console.error("Error updating user scores:", error);
+    // Consider additional error handling or reporting
+  }
 };

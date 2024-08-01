@@ -146,6 +146,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
     }
   };
 
+  
   return (
     <div className="adduser-container p-3">
       <div className="add-new-user-container">

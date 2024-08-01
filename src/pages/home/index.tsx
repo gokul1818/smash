@@ -2,7 +2,7 @@ import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { fetchAllUserData, useFetchUserData } from "../../api/apiServices";
+import { fetchAllUserData, updateUserScores, useFetchUserData } from "../../api/apiServices";
 import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import crockImg from "../../assets/images/corck_img.svg";
@@ -43,6 +43,7 @@ const Home: React.FC = () => {
   const courtDetails = useSelector((state: RootState) => state.user.courtDetails);
   const isLocationMatched = useSelector((state: RootState) => state.auth.match);
   const [searchloading, setSearchLoading] = useState<boolean>(false);
+  const [matchloading, setMatchLoading] = useState<boolean>(false);
   const userId = userData?.userId
   const [location, setLocation] = useState<any>([]);
   const [currentMatchPlayer, setCurrentMatchPlayer] = useState<any>([]);
@@ -51,9 +52,12 @@ const Home: React.FC = () => {
 
   const [timeRemaining, setTimeRemaining] = useState(0);
   useEffect(() => {
-    const durationMillis = 20 * 60 * 1000; // 20 minutes in milliseconds
-    const initialTimeRemaining = durationMillis - calculateDuration(courtDetails[0]?.startTime);
-    setTimeRemaining(Math.max(initialTimeRemaining, 0))
+    if (courtDetails) {
+
+      const durationMillis = 20 * 60 * 1000; // 20 minutes in milliseconds
+      const initialTimeRemaining = durationMillis - calculateDuration(courtDetails[0]?.startTime);
+      setTimeRemaining(Math.max(initialTimeRemaining, 0))
+    }
   }, [courtDetails])
 
   const data = [
@@ -137,7 +141,7 @@ const Home: React.FC = () => {
       unsubscribecourt();
     };
   };
-  
+
   const updateUserReady = async () => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
@@ -239,7 +243,7 @@ const Home: React.FC = () => {
           Awinner: null,
           Bwinner: null,
           startBy: userData?.phoneNumber,
-          startTime: new Date()
+          startTime: new Date(),
         }
         // return
         // Update the document
@@ -251,29 +255,25 @@ const Home: React.FC = () => {
     }
   }
 
-  const updateUserScores = async (userId: string, score: number) => {
-    try {
-      // Iterate over each user to update their score
-      const userRef = doc(db, "users", userId); // Reference to the specific user document
-      await updateDoc(userRef, {
-        score: score,
-        todayMatchPlayed: userData?.todayMatchPlayed + 1
-      });
-      console.log('User scores updated successfully');
-    } catch (error) {
-      console.error('Error updating user scores:', error);
-    }
-  };
+
 
   const handleWonMatch = async (teamA: boolean) => {
     try {
+      setMatchLoading(true)
       const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
-      const playersToUpdate = teamA == true
-        ? currentMatchPlayer.slice(0, 2) // First 2 players if team A wins
-        : currentMatchPlayer.slice(2, 4); // Last 2 players if team B wins
-      console.log(playersToUpdate, teamA)
+      const playersToUpdateWinner = teamA == true
+        ? currentMatchPlayer.slice(0, 2)
+        : currentMatchPlayer.slice(2, 4);
+      const playersToUpdateLooser = teamA == false
+        ? currentMatchPlayer.slice(0, 2)
+        : currentMatchPlayer.slice(2, 4);
+
       await Promise.all(
-        playersToUpdate.map((player: any) => updateUserScores(player.userId, player.score + 20)) // Set score to 20
+        playersToUpdateWinner.map((player: any) => updateUserScores(player.userId, player.score + 20, userData)) // Set score to 20
+      );
+
+      await Promise.all(
+        playersToUpdateLooser.map((player: any) => updateUserScores(player.userId, player.score == 0 ? 0 : - 20, userData)) // Set score to 20
       );
 
       // Update user scores
@@ -285,13 +285,19 @@ const Home: React.FC = () => {
         players: [],
         start: false,
         startBy: "",
-        startTime: ""
+        startTime: "",
+        lastMatchPlayed: new Date()
+
       }
       // return
       // Update the document
       await updateDoc(courtRef, updatedData);
+      setMatchLoading(false)
+
       console.log('Document updated successfully');
     } catch (error) {
+      setMatchLoading(false)
+
       console.error('Error updating document:', error);
     }
   }
@@ -317,8 +323,10 @@ const Home: React.FC = () => {
       handleReset()
     }
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
   };
+  useEffect(() => {
+
+  }, [userData])
   return (
     <div className='home-container'>
       <div className='p-4'>
@@ -341,7 +349,7 @@ const Home: React.FC = () => {
         </div>
         {!isLocationMatched && <div className='home-start-match-card mt-3'>
           <div className='w-25 d-flex flex-column '>
-            <img src={crockImg} alt='img' width={100} height={100} />
+            <img src={crockImg} className='blinkeffect' alt='img' width={100} height={100} />
           </div>
           <div className='w-50 d-flex flex-column h-100  align-items-center justify-content-evenly'>
             {userData.readyMatch ?
@@ -448,7 +456,7 @@ const Home: React.FC = () => {
                               height='30px'
                               width='80px'
                               onClick={() => handleWonMatch(false)}
-
+                              disabled={matchloading}
                             />
                             <img
                               src={reset}
@@ -456,12 +464,14 @@ const Home: React.FC = () => {
                               width='40px'
                               alt='reset'
                               onClick={() => handleReset()}
+
                             />
                             <Button
                               label="WON"
                               height='30px'
                               width='80px'
                               onClick={() => handleWonMatch(true)}
+                              disabled={matchloading}
 
                             />
                           </div> : ""}

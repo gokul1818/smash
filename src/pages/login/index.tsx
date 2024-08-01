@@ -19,7 +19,6 @@ const Login: React.FC<LoginProps> = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
 
-
   const handleLogin = async () => {
     try {
       // Fetch user data from Firestore
@@ -32,35 +31,53 @@ const Login: React.FC<LoginProps> = () => {
         return;
       }
 
-      const encryptedPassword = querySnapshot.docs[0].data().password;
-      console.log(encryptedPassword)
+      const userDoc = querySnapshot.docs[0];
+      const encryptedPassword = userDoc.data().password;
+
+      // Decrypt password (ensure base64ToUtf8 is defined and properly imported)
       const decryptedPassword = base64ToUtf8(encryptedPassword);
-      console.log(decryptedPassword, "dddd");
+
       if (password !== decryptedPassword) {
-        toast.error("Failed to login. Invalid Password.");
+        toast.error("Failed to login. Invalid password.");
         return;
       }
 
-
       const userData = {
-        ...querySnapshot.docs[0].data(),
-        userId: querySnapshot.docs[0].id // Add userId to userData
+        ...userDoc.data(),
+        userId: userDoc.id,
+        lastMatchPlayed: userDoc.data().lastMatchPlayed
       };
-      const userId = querySnapshot.docs[0].id; // Get the document ID of the user
 
-      // Dispatch login action
+
+      const date = new Date(userData?.lastMatchPlayed);
+      const dateOnly = date.toLocaleDateString();
+      const now = new Date();
+      const month = now.getMonth() + 1; 
+      const day = now.getDate();
+      const year = now.getFullYear();
+      const formattedDate = `${month}/${day}/${year}`;
+      if (formattedDate !== dateOnly) {
+        await updateDoc(doc(db, "users", userDoc.id), {
+          lastLogin: now.toISOString(),
+          lastMatchPlayed: now.toISOString(),
+          todayMatchPlayed: 0
+        });
+      } else {
+        await updateDoc(doc(db, "users", userDoc.id), {
+          lastLogin: now.toISOString(),
+        });
+      }
+
       dispatch(login(userData));
       toast.success("Login successful.");
-      navigate("/home")
-      await updateDoc(doc(db, "users", userId), {
-        lastLogin: new Date().toISOString(),
-      });
-
+      navigate("/home");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Failed to login. Please try again.");
     }
+
   };
+
 
   return (
     <div className="login-container p-3">
@@ -90,7 +107,7 @@ const Login: React.FC<LoginProps> = () => {
       </div>
       <Button
         label="Login"
-        onClick={handleLogin}
+        onClick={() => handleLogin()}
         primaryBtn
         className="mt-2"
       />
