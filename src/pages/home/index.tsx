@@ -141,7 +141,7 @@ const Home: React.FC = () => {
     };
   };
 
-  const updateUserReady = async (userId: any) => {
+  const updateUserReady = async (userId: any, isUserReady: boolean) => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
       return;
@@ -149,20 +149,26 @@ const Home: React.FC = () => {
     const now = new Date();
 
     const userDocRef = doc(db, "users", userId);
-    let isUserReady
-    if (userData?.readyMatch == true) {
-      isUserReady = false
 
+    if (isUserReady == true) {
+      try {
+        await updateDoc(userDocRef, {
+          readyMatch: isUserReady,
+          lastLogin: now.toISOString(),
+        });
+        console.log("User readiness updated in Firestore.");
+      } catch (error) {
+        console.error("Error updating user readiness:", error);
+      }
     } else {
-      isUserReady = true
-    }
-    try {
-      await updateDoc(userDocRef, {
-        readyMatch: isUserReady,
-      });
-      console.log("User readiness updated in Firestore.");
-    } catch (error) {
-      console.error("Error updating user readiness:", error);
+      try {
+        await updateDoc(userDocRef, {
+          readyMatch: isUserReady,
+        });
+        console.log("User readiness updated in Firestore.");
+      } catch (error) {
+        console.error("Error updating user readiness:", error);
+      }
     }
   };
 
@@ -341,7 +347,7 @@ const Home: React.FC = () => {
 
         // Check if the time difference is greater than 2 hours
         if (timeDifference > twoHoursInMilliseconds) {
-          await updateUserReady(userData.id); // Update user document
+          await updateUserReady(userData.id, false); // Update user document
         }
       }
     };
@@ -387,7 +393,7 @@ const Home: React.FC = () => {
               width='120px'
               secondaryBtn={true}
               primaryBtn={false}
-              onClick={() => updateUserReady(userId)}
+              onClick={() => updateUserReady(userId, !userData.readyMatch)}
             />
           </div>
         </div>}
