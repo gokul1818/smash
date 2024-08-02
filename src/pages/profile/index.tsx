@@ -1,13 +1,12 @@
+import imageCompression from "browser-image-compression";
 import React, { useState } from "react";
-
 // redux
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 // firebase 
 import { doc, updateDoc } from "@firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
-import { db, storage } from "../../firebaseconfig";
+import { getDownloadURL, ref, uploadBytes, deleteObject } from "@firebase/storage"; import { db, storage } from "../../firebaseconfig";
 
 // components
 import Button from "../../components/buttonComponent";
@@ -52,23 +51,54 @@ const Profile: React.FC = () => {
     window.open(smsUri);
   };
 
+  interface FirebaseError extends Error {
+    code: string;
+  }
+
   const handleUpdate = async () => {
     if (selectedFile) {
       setIsLoading(true);
       try {
-        // Create a storage reference
-        const storageRef = ref(storage, `uploads/${selectedFile.name}`);
+        // Get a reference to the user's document
+        const userDocRef = doc(db, "users", userData?.userId);
 
-        // Upload the file
-        const snapshot = await uploadBytes(storageRef, selectedFile);
+       
 
-        // Get the download URL
+        // Get the current profile picture URL
+        const oldProfilePicUrl = userData?.profilePic;
+
+        // If there's an old profile picture, delete it
+        if (oldProfilePicUrl) {
+          const oldProfilePicRef = ref(storage, oldProfilePicUrl);
+          try {
+            await deleteObject(oldProfilePicRef);
+          } catch (error) {
+            const deleteError = error as FirebaseError; // Type assertion
+            // Handle cases where the object does not exist or other errors
+            if (deleteError.code === 'storage/object-not-found') {
+              console.warn("Old profile picture does not exist, skipping delete.");
+            } else {
+              console.error("Error deleting old profile picture: ", deleteError);
+            }
+          }
+        }
+
+        // Create a storage reference for the new file using the user's name
+        const newProfilePicRef = ref(storage, `uploads/${userData?.name}.jpg`); // Adjust the file name and format as needed
+
+        // Upload the new file
+        const snapshot = await uploadBytes(newProfilePicRef, selectedFile);
+
+        // Get the download URL of the new file
         const url = await getDownloadURL(snapshot.ref);
 
-        // Update the user profile picture URL in Firestore
-        const userDocRef = doc(db, "users", userData?.userId);
+        // Update the user's profile picture URL in Firestore
         await updateDoc(userDocRef, { profilePic: url });
+
+        // Update the Redux state with the new profile picture URL
         dispatch(login({ ...userData, profilePic: url }));
+
+        // Reset loading state and close the modal
         setIsLoading(false);
         setIsModalOpen(false);
       } catch (error) {
@@ -78,7 +108,22 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleFileSelect = () => { };
+  const handleFileSelect = async (file: File) => {
+    if (file) {
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+        const compressedFile = await imageCompression(file, options);
+        setSelectedFile(compressedFile);
+      } catch (error) {
+        console.error("Error compressing file: ", error);
+      }
+    }
+  };
+
   // -------------------- RENDER UI -------------------- //
   return (
     <div className="profile-container p-4 mb-5">
