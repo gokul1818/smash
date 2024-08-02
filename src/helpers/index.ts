@@ -1,3 +1,6 @@
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebaseconfig";
+
 export const utf8ToBase64 = (str: any) => {
   return btoa(unescape(encodeURIComponent(str)));
 };
@@ -125,6 +128,27 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
+export const handleReset = async () => {
+  const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
+  const courtRef = doc(db, "BadmintonCourt", courtId);
+  const updatedData = {
+    court: 1,
+    players: [],
+    start: false,
+    startBy: "",
+    startTime: ""
+  }
+  await updateDoc(courtRef, updatedData);
+}
 
 
 
+export const formatTime = (ms: any) => {
+  const minutes = Math.floor(ms / (60 * 1000));
+  const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+  if (minutes == 0 && seconds == 0) {
+    console.log(minutes, seconds)
+    handleReset()
+  }
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};

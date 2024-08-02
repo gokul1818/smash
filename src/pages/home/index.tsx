@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
@@ -15,7 +15,7 @@ import reset from "../../assets/images/resetIcon.svg";
 import Button from '../../components/buttonComponent';
 import SubscriptionCard from '../../components/subscriptionCard';
 import { db } from '../../firebaseconfig';
-import { calculateDistance, getChoosePlayer, getDateFormatISO, getLastLoginTodayUser } from '../../helpers';
+import { calculateDistance, formatTime, getChoosePlayer, getDateFormatISO, getLastLoginTodayUser, handleReset } from '../../helpers';
 import { updateLocationMatch } from '../../redux/reducer/authSlice';
 import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
 import { RootState } from '../../redux/store';
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
     };
   };
 
-  const updateUserReady = async () => {
+  const updateUserReady = async (userId: any) => {
     if (!userId) {
       console.error("User ID not found in Redux store.");
       return;
@@ -301,31 +301,54 @@ const Home: React.FC = () => {
     }
   }
 
-  const handleReset = async () => {
-    const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
-    const courtRef = doc(db, "BadmintonCourt", courtId);
-    const updatedData = {
-      court: 1,
-      players: [],
-      start: false,
-      startBy: "",
-      startTime: ""
-    }
-    await updateDoc(courtRef, updatedData);
-  }
 
-  const formatTime = (ms: any) => {
-    const minutes = Math.floor(ms / (60 * 1000));
-    const seconds = Math.floor((ms % (60 * 1000)) / 1000);
-    if (minutes == 0 && seconds == 0) {
-      console.log(minutes, seconds)
-      handleReset()
-    }
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  };
+
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        // Reference to the users collection
+        const usersCollectionRef = collection(db, "users");
 
-  }, [userData])
+        // Fetch all documents from the collection
+        const userSnapshot = await getDocs(usersCollectionRef);
+        const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // setUsers(userList); // Set users state with the fetched data
+
+        // Process user data
+        userList.forEach(user => {
+          checkLastLogin(user);
+        });
+
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        // Consider additional error handling or reporting
+      }
+    };
+
+    const checkLastLogin = async (userData: any) => {
+      if (userData?.lastLogin) {
+        // Parse the ISO 8601 date string into a Date object
+        const lastLoginTime = new Date(userData.lastLogin);
+        const currentTime = new Date();
+        const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
+
+        // Calculate the time difference
+        const timeDifference = currentTime.getTime() - lastLoginTime.getTime();
+
+        // Check if the time difference is greater than 2 hours
+        if (timeDifference > twoHoursInMilliseconds) {
+          await updateUserReady(userData.id); // Update user document
+        }
+      }
+    };
+
+
+    fetchUsers(); // Fetch users when the component mounts
+
+  }, []);
+
+
   return (
     <div className='home-container'>
       <div className='p-4'>
@@ -361,7 +384,7 @@ const Home: React.FC = () => {
               width='120px'
               secondaryBtn={true}
               primaryBtn={false}
-              onClick={() => updateUserReady()}
+              onClick={() => updateUserReady(userId)}
             />
           </div>
         </div>}
