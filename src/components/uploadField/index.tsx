@@ -41,7 +41,7 @@ const UploadDocumentField: React.FC<UploadDocumentFieldProps> = ({
             <>
               <input
                 type="file"
-                accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                accept=".png,.jpg,.jpeg"
                 onChange={!selectedFile ? handleFileChange : undefined}
                 disabled={isLoading}
               />

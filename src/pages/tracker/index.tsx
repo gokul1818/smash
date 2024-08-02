@@ -100,7 +100,7 @@ const Tracker: React.FC = () => {
           <div key={index}>
             <div className={`top-palyer-list-card  ${index == 0 ? "rank1card" : index == 1 ? "rank2card" : index == 2 ? "rank3card" : ""}`}>
               <div className='w-50  d-flex align-items-center'>
-                <img src={players.profilePic} className='top-palyer-list-profile-img' alt='rank3' />
+                <img src={players.profilePic} className='top-palyer-list-profile-img' alt={`rank ${index + 1  }`} />
                 <p className='fs-20 mb-0  E4-black-color audiowide-regular ms-2'>
                   #{index + 1}
                 </p>
