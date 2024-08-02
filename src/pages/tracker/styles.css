@@ -51,7 +51,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 }
 .top-palyer-list-card {
   width: 100%;
@@ -82,7 +82,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 
 }
 .first-half {

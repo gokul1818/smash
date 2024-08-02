@@ -39,6 +39,7 @@ const Login: React.FC<LoginProps> = () => {
 
       if (password !== decryptedPassword) {
         toast.error("Failed to login. Invalid password.");
+        setPassword("")
         return;
       }
 
@@ -52,7 +53,7 @@ const Login: React.FC<LoginProps> = () => {
       const date = new Date(userData?.lastMatchPlayed);
       const dateOnly = date.toLocaleDateString();
       const now = new Date();
-      const month = now.getMonth() + 1; 
+      const month = now.getMonth() + 1;
       const day = now.getDate();
       const year = now.getFullYear();
       const formattedDate = `${month}/${day}/${year}`;

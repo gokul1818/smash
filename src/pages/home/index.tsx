@@ -53,7 +53,6 @@ const Home: React.FC = () => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   useEffect(() => {
     if (courtDetails) {
-
       const durationMillis = 20 * 60 * 1000; // 20 minutes in milliseconds
       const initialTimeRemaining = durationMillis - calculateDuration(courtDetails[0]?.startTime);
       setTimeRemaining(Math.max(initialTimeRemaining, 0))

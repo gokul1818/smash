@@ -58,7 +58,7 @@
   width: 68px;
   height: 68px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 }
 .unavaliable-players-card {
   background-color: #616161;
@@ -141,7 +141,7 @@
 .profile-img {
   width: 50px;
   height: 50px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 50%;
 }
 
