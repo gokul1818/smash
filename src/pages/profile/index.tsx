@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
 
   const sendSMS = () => {
     const encryptedPhoneNumber = utf8ToBase64(to);
-    const appLink = `https://smash-sigma.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
+    const appLink = `https://smashbadminton.vercel.app/add-user?phone=${encryptedPhoneNumber}`;
     const encodedAppLink = encodeURIComponent(appLink);
     const smsUri = `sms:${to}?body=${encodedAppLink}`;
     window.open(smsUri);
@@ -163,6 +163,8 @@ const Profile: React.FC = () => {
         <SubscriptionCard />
       ) : (
         <div className="add-new-user-admin my-4">
+          <p className="profile-label w-100  text-center black-color">Add New User </p>
+
           <TextInput
             type="number"
             onChange={(e) => {

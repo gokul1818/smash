@@ -8,8 +8,7 @@
   background: linear-gradient(to bottom, #0e0e0e, #021531);
 }
 .profile-label {
-  font-family: "Akaya Telivigala", system-ui;
-  font-size: 22px;
+  font-size: 18px;
 }
 .profile-edit-icon {
   position: absolute;
@@ -20,14 +19,14 @@
 }
 .add-new-user-admin {
   width: 350px;
-  height: 270px;
-  min-height: 270px;
+  height: 220px;
+  min-height: 230px;
   background: #ffffff;
   border-radius: 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   padding: 10px;
 }
 

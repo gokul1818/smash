@@ -146,16 +146,20 @@ const Home: React.FC = () => {
       console.error("User ID not found in Redux store.");
       return;
     }
+    const now = new Date();
+
     const userDocRef = doc(db, "users", userId);
     let isUserReady
     if (userData?.readyMatch == true) {
       isUserReady = false
+
     } else {
       isUserReady = true
     }
     try {
       await updateDoc(userDocRef, {
         readyMatch: isUserReady,
+        lastLogin: now.toISOString(),
       });
       console.log("User readiness updated in Firestore.");
     } catch (error) {
