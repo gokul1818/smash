@@ -101,14 +101,14 @@ const Profile: React.FC = () => {
           onClick={() => setIsModalOpen(true)}
         />
       </div>
-      <p className="profile-label fs-24 primarygrey-color mt-3">
+      <p className="profile-label fs-24 primarygrey-color audiowide-regular mt-3">
         {userData?.name}
       </p>
       <div
         className=" d-flex  flex-column align-self-center  justify-content-center mt-3"
         style={{ width: "300px" }}
       >
-        <div className="d-flex w-100 justify-content-between ">
+        <div className="d-flex w-100 justify-content-between align-items-center m-0">
           <p className="profile-label w-50 primarygrey-color">Name</p>
           <div className="w-50">
             <TextInput
@@ -117,13 +117,13 @@ const Profile: React.FC = () => {
               value={userData?.name}
               primary={false}
               disabled={editProfile}
-              className="pb-3 "
+              className="pb-3"
               placeholder="Enter name"
             />
           </div>
         </div>
 
-        <div className="d-flex w-100 justify-content-between ">
+        <div className="d-flex w-100 justify-content-between align-items-center m-0">
           <p className="profile-label  w-50 primarygrey-color">Phone No</p>
           <div className="w-50">
             <TextInput
@@ -136,7 +136,7 @@ const Profile: React.FC = () => {
             />
           </div>
         </div>
-        <div className="d-flex w-100 justify-content-between ">
+        <div className="d-flex w-100 justify-content-between align-items-center m-0">
           <p className="profile-label w-50 primarygrey-color">Blood Group</p>
           <div className="w-50">
             <TextInput
