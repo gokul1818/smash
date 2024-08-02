@@ -153,7 +153,8 @@
 }
 
 .subscription-card-conatiner {
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
   height: auto;
   background-color: #fff;
   display: flex;

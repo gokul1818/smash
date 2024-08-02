@@ -7,7 +7,7 @@ import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import crockImg from "../../assets/images/corck_img.svg";
 import court from "../../assets/images/court.svg";
-import dummyImg from "../../assets/images/dummyImg.png";
+import dummyImg from "../../assets/images/dummyImg.svg";
 import proBadge from "../../assets/images/proBadge.svg";
 import QuestionMark from "../../assets/images/questionMark.svg";
 import streaks from "../../assets/images/streaksGrp.svg";

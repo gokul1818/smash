@@ -23,7 +23,7 @@ import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import edit from "../../assets/images/edit.png";
 import proBadge from "../../assets/images/proBadge.svg";
-import dummyImg from "../../assets/images/dummyImg.png";
+import dummyImg from "../../assets/images/dummyImg.svg";
 // styles
 import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
