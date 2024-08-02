@@ -159,7 +159,6 @@ const Home: React.FC = () => {
     try {
       await updateDoc(userDocRef, {
         readyMatch: isUserReady,
-        lastLogin: now.toISOString(),
       });
       console.log("User readiness updated in Firestore.");
     } catch (error) {
