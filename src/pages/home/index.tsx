@@ -1,6 +1,7 @@
 import { collection, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { fetchAllUserData, updateUserScores, useFetchUserData } from "../../api/apiServices";
 import averageBadge from "../../assets/images/averageBadge.svg";
@@ -10,18 +11,17 @@ import court from "../../assets/images/court.svg";
 import dummyImg from "../../assets/images/dummyImg.svg";
 import proBadge from "../../assets/images/proBadge.svg";
 import QuestionMark from "../../assets/images/questionMark.svg";
-import streaks from "../../assets/images/streaksGrp.svg";
 import reset from "../../assets/images/resetIcon.svg";
+import streaks from "../../assets/images/streaksGrp.svg";
 import Button from '../../components/buttonComponent';
+import ScaningLoading from '../../components/scanLoading/scanLoading';
 import SubscriptionCard from '../../components/subscriptionCard';
 import { db } from '../../firebaseconfig';
-import { calculateDistance, formatTime, getChoosePlayer, getDateFormatISO, getLastLoginTodayUser, handleReset } from '../../helpers';
+import { calculateDistance, formatTime, getChoosePlayer, getDateFormatISO, getLastLoginTodayUser, handleMatchReset } from '../../helpers';
 import { updateLocationMatch } from '../../redux/reducer/authSlice';
 import { updateAllCourtDetails } from '../../redux/reducer/userSlice';
 import { RootState } from '../../redux/store';
 import "./styles.css";
-import ScaningLoading from '../../components/scanLoading/scanLoading';
-import { toast } from 'react-toastify';
 
 interface StartTime {
   seconds: number;
@@ -494,7 +494,7 @@ const Home: React.FC = () => {
                               height='40px'
                               width='40px'
                               alt='reset'
-                              onClick={() => handleReset()}
+                              onClick={() => handleMatchReset()}
 
                             />
                             <Button

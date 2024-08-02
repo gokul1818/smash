@@ -128,7 +128,8 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-export const handleReset = async () => {
+export const handleMatchReset = async () => {
+  console.log("sdfsdf")
   const courtId = 'vX17ukZWStK6IRpWu6F5'; // Replace with the actual document ID
   const courtRef = doc(db, "BadmintonCourt", courtId);
   const updatedData = {
@@ -146,9 +147,12 @@ export const handleReset = async () => {
 export const formatTime = (ms: any) => {
   const minutes = Math.floor(ms / (60 * 1000));
   const seconds = Math.floor((ms % (60 * 1000)) / 1000);
-  if (minutes == 0 && seconds == 0) {
-    console.log(minutes, seconds)
-    handleReset()
-  }
+  setTimeout(() => {
+
+    if (minutes == 0 && seconds == 0) {
+      console.log(minutes, seconds)
+      // handleMatchReset()
+    }
+  }, 3000);
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
