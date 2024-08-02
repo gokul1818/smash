@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import dummyImg from "../../assets/images/dummyImg.svg";
+import dummyImg from "../../assets/images/dummyImg.png";
 import Podium from "../../assets/images/Podium.svg";
 import "./styles.css";
 

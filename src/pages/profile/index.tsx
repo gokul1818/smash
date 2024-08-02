@@ -23,7 +23,7 @@ import averageBadge from "../../assets/images/averageBadge.svg";
 import beginnerBadge from "../../assets/images/beginerBadge.svg";
 import edit from "../../assets/images/edit.png";
 import proBadge from "../../assets/images/proBadge.svg";
-
+import dummyImg from "../../assets/images/dummyImg.png";
 // styles
 import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
@@ -138,7 +138,7 @@ const Profile: React.FC = () => {
           }
           alt="badge"
         />
-        <img src={userData?.profilePic} className="avaliable-profile-car-img" alt="img" />
+        <img src={userData?.profilePic|| dummyImg} className="avaliable-profile-car-img" alt="img" />
         <img
           src={edit}
           alt="edit"

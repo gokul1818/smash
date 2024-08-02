@@ -5,9 +5,9 @@ import { toast } from "react-toastify"; // Import toast notifications
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
-import { base64ToUtf8, utf8ToBase64 } from '../../helpers';
+import { base64ToUtf8, utf8ToBase64 } from "../../helpers";
 import "./styles.css"; // Import Firebase instance
-interface AddNewUserProps { }
+interface AddNewUserProps {}
 
 const AddNewUser: React.FC<AddNewUserProps> = () => {
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
   const [slot, setSlot] = useState<string>("");
   const [password, setPassword] = useState<any>("");
   const [showPassword, setShowPassword] = useState<Boolean>(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const bloodGroupOptions = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
   const levelOptions = ["Pro", "Beginner", "Average"];
@@ -42,13 +43,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
     "8:00 to 9:00 pm",
     "9:00 to 10:00 pm",
     "10:00 to 11:00 pm",
-
-
   ];
-
-
-
-
 
   useEffect(() => {
     // Extract encrypted phone number from query parameter 'phone'
@@ -56,10 +51,9 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
     const encryptedPhone = queryParams.get("phone");
 
     if (encryptedPhone) {
-
       try {
-        const decryptedPhone = base64ToUtf8(encryptedPhone)
-        console.log(decryptedPhone)
+        const decryptedPhone = base64ToUtf8(encryptedPhone);
+        console.log(decryptedPhone);
         setDecryptedPhoneNumber(decryptedPhone);
       } catch (error) {
         console.error("Error decrypting phone number:", error);
@@ -74,18 +68,30 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
   };
 
   const handleAddNewUser = async () => {
+    setIsLoading(true);
     // Form validation
-    if (!name || !age || !bloodGroup || !level || !slot || !decryptedPhoneNumber || !password) {
+    if (
+      !name ||
+      !age ||
+      !bloodGroup ||
+      !level ||
+      !slot ||
+      !decryptedPhoneNumber ||
+      !password
+    ) {
       toast.error("Please fill in all fields.");
+      setIsLoading(false);
       return;
     }
     // Check if phone number already exists
     const phoneExists = await checkPhoneExists(decryptedPhoneNumber);
     if (phoneExists) {
-      toast.error("Phone number already exists. Please use a different phone number.");
+      toast.error(
+        "Phone number already exists. Please use a different phone number."
+      );
+      setIsLoading(false);
       return;
     }
-
 
     const encryptedPassword = utf8ToBase64(password);
 
@@ -106,8 +112,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       lastLogin: new Date().toISOString(),
       billDue: new Date().toISOString(),
       played: 0,
-      todayMatchPlayed: 0
-
+      todayMatchPlayed: 0,
     };
 
     try {
@@ -122,31 +127,34 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
       setLevel("");
       setSlot("");
       setDecryptedPhoneNumber("");
-      setPassword("")
+      setPassword("");
       toast.success("User added successfully!");
-
+      setIsLoading(false);
       // Navigate to home page or any other desired route
       navigateToHome();
     } catch (error) {
       console.error("Error adding document: ", error);
+
       toast.error("Failed to add user. Please try again.");
+      setIsLoading(false);
     }
   };
 
-
   const checkPhoneExists = async (phoneNumber: string) => {
+    setIsLoading(true);
     try {
       const usersRef = collection(db, "users");
       const q = query(usersRef, where("phoneNumber", "==", phoneNumber));
       const querySnapshot = await getDocs(q);
+      setIsLoading(false);
       return !querySnapshot.empty;
     } catch (error) {
       console.error("Error checking phone number existence:", error);
+      setIsLoading(false);
       return false; // Return false on error to avoid unintended behavior
     }
   };
 
-  
   return (
     <div className="adduser-container p-3">
       <div className="add-new-user-container">
@@ -183,7 +191,6 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
           className=""
           inputLabel="Level"
           options={levelOptions}
-
         />
         <TextInput
           type="select"
@@ -196,7 +203,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
         />
         <TextInput
           type="number"
-          onChange={(e) => { }}
+          onChange={(e) => {}}
           value={decryptedPhoneNumber}
           disabled
           placeholder="Enter Phone Number"
@@ -205,7 +212,9 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
         />
         <TextInput
           type={showPassword ? "password" : "text"}
-          onChange={(e) => { setPassword(e) }}
+          onChange={(e) => {
+            setPassword(e);
+          }}
           value={password}
           placeholder="Enter Password"
           className=""
@@ -222,6 +231,7 @@ const AddNewUser: React.FC<AddNewUserProps> = () => {
           secondaryBtn={true}
           primaryBtn={false}
           onClick={handleAddNewUser}
+          loading={isLoading}
         />
       </div>
     </div>
