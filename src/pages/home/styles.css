@@ -76,7 +76,8 @@
 .avaliable-players-card-pro {
   background-color: #f1dc83;
   width: 100%;
-  min-width: 100%;
+  min-width: 320px;
+  max-width: 350px;
   height: 150px;
   margin-right: 20px;
   border-radius: 20px;
@@ -89,7 +90,8 @@
 .avaliable-players-card-average {
   background-color: #b0b8fd;
   width: 100%;
-  min-width: 100%;
+  min-width: 320px;
+  max-width: 350px;
   height: 150px;
   margin-right: 20px;
   border-radius: 20px;
@@ -102,7 +104,8 @@
 .avaliable-players-card-beginner {
   background-color: #bcc1cb;
   width: 100%;
-  min-width: 100%;
+  min-width: 320px;
+  max-width: 350px;
   height: 150px;
   margin-right: 20px;
   border-radius: 20px;
