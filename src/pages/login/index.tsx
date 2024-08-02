@@ -1,16 +1,23 @@
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux'; // Import useDispatch
+import { useDispatch } from "react-redux"; // Import useDispatch
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import smashLogo from "../../assets/images/smashLogo.svg";
 import Button from "../../components/buttonComponent";
 import TextInput from "../../components/textInputcomponent";
 import { db } from "../../firebaseconfig";
-import { base64ToUtf8, utf8ToBase64 } from '../../helpers/index';
+import { base64ToUtf8, utf8ToBase64 } from "../../helpers/index";
 import { login } from "../../redux/reducer/authSlice";
 import "./styles.css";
-interface LoginProps { }
+interface LoginProps {}
 
 const Login: React.FC<LoginProps> = () => {
   const navigate = useNavigate();
@@ -18,8 +25,10 @@ const Login: React.FC<LoginProps> = () => {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    setIsLoading(true); 
     try {
       // Fetch user data from Firestore
       const usersRef = collection(db, "users");
@@ -28,6 +37,7 @@ const Login: React.FC<LoginProps> = () => {
 
       if (querySnapshot.empty) {
         toast.error("Failed to login. User not found.");
+        setIsLoading(false);
         return;
       }
 
@@ -39,16 +49,16 @@ const Login: React.FC<LoginProps> = () => {
 
       if (password !== decryptedPassword) {
         toast.error("Failed to login. Invalid password.");
-        setPassword("")
+        setPassword("");
+        setIsLoading(false);
         return;
       }
 
       const userData = {
         ...userDoc.data(),
         userId: userDoc.id,
-        lastMatchPlayed: userDoc.data().lastMatchPlayed
+        lastMatchPlayed: userDoc.data().lastMatchPlayed,
       };
-
 
       const date = new Date(userData?.lastMatchPlayed);
       const dateOnly = date.toLocaleDateString();
@@ -61,7 +71,7 @@ const Login: React.FC<LoginProps> = () => {
         await updateDoc(doc(db, "users", userDoc.id), {
           lastLogin: now.toISOString(),
           lastMatchPlayed: now.toISOString(),
-          todayMatchPlayed: 0
+          todayMatchPlayed: 0,
         });
       } else {
         await updateDoc(doc(db, "users", userDoc.id), {
@@ -75,10 +85,9 @@ const Login: React.FC<LoginProps> = () => {
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Failed to login. Please try again.");
+      setIsLoading(false); 
     }
-
   };
-
 
   return (
     <div className="login-container p-3">
@@ -111,6 +120,7 @@ const Login: React.FC<LoginProps> = () => {
         onClick={() => handleLogin()}
         primaryBtn
         className="mt-2"
+        loading={isLoading}
       />
     </div>
   );

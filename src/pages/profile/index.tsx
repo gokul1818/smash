@@ -205,6 +205,7 @@ const Profile: React.FC = () => {
           secondaryBtn={true}
           primaryBtn={false}
           onClick={() => handleUpdate()}
+          loading={isLoading}
         />
       </ModalComponent>
     </div>

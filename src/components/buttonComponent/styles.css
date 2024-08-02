@@ -1,4 +1,5 @@
 .primary-btn {
+  display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -14,6 +15,7 @@
 }
 
 .secondary-btn {
+  display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;

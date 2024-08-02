@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
-import { debounce } from '../../helpers';
+import React, { useCallback } from "react";
+import Loader from "../loader";
+import { debounce } from "../../helpers";
 import "./styles.css";
 interface ButtonProps {
   onClick?: () => void;
@@ -12,6 +13,7 @@ interface ButtonProps {
   secondaryBtn?: boolean;
   type?: any;
   debounceDelay?: number;
+  loading?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -25,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({
   secondaryBtn = false,
   type,
   debounceDelay = 500,
+  loading = false,
 }) => {
   const debouncedOnClick = useCallback(
     debounce(() => {
@@ -35,18 +38,19 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       onClick={debouncedOnClick}
-      className={primaryBtn ?
-        `primary-btn white-color bg-E1-black-color  ${className}` :
-        secondaryBtn ?
-          `secondary-btn white-color bg-persianGreen-color ${className}` :
-          `${className}`
+      className={
+        primaryBtn
+          ? `primary-btn white-color bg-E1-black-color  ${className}`
+          : secondaryBtn
+          ? `secondary-btn white-color bg-persianGreen-color ${className}`
+          : `${className}`
       }
       disabled={disabled}
       style={{ height, width }}
       type={type}
     >
-      {label}
-    </button >
+      {loading ? <Loader /> : label}
+    </button>
   );
 };
 
