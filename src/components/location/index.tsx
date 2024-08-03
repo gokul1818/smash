@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
-
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import location from "../../assets/images/location.gif"
+import Button from '../buttonComponent';
 const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLocation }) => {
     const [status, setStatus] = useState<'idle' | 'error' | 'permission-granted'>('idle');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [redirectTo, setRedirectTo] = useState<string | null>(null);
 
     const handleEnableLocation = () => {
         if (navigator.geolocation) {
@@ -12,6 +14,7 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                 () => {
                     setStatus('permission-granted');
                     onEnableLocation();
+                    setRedirectTo('/home'); // Set the redirect path here
                 },
                 (error) => {
                     setStatus('error');
@@ -25,7 +28,6 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                         case error.TIMEOUT:
                             setErrorMessage("The request to access location timed out.");
                             break;
-
                         default:
                             setErrorMessage("An error occurred.");
                     }
@@ -37,24 +39,49 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
         }
     };
 
+    useEffect(() => {
+        if (status === 'permission-granted' && redirectTo) {
+            // Redirect to the target path
+            setRedirectTo(redirectTo);
+        }
+    }, [status, redirectTo]);
+
+    if (redirectTo) {
+        return <Navigate to={redirectTo} />;
+    }
+
     return (
-        <div>
-            <h2>Location Required</h2>
+        <div className='d-flex align-items-center flex-column justify-content-center text-center'
+            style={{ height: "70vh" }}>
+            <img src={location} />
+            <h2 className='ubuntu-medium'>Location Required</h2>
             {status === 'idle' && (
-                <div>
-                    <p>Please enable location services to use this feature.</p>
-                    <button onClick={handleEnableLocation}>Enable Location</button>
+                <div className='text-center '>
+                    <p className=' ubuntu-light '>Please enable location services to use this feature.</p>
+                    <Button
+                        label="Enable Location"
+                        onClick={() => handleEnableLocation()}
+                        primaryBtn
+                        className="mt-2 mx-auto"
+                    // loading={isLoading}
+                    />
                 </div>
             )}
             {status === 'error' && errorMessage && (
                 <div>
-                    <p>{errorMessage}</p>
-                    <button onClick={handleEnableLocation}>Try Again</button>
+                    <p className='ubuntu-light  '> {errorMessage}</p>
+                    <Button
+                        label="Try Again"
+                        onClick={() => handleEnableLocation()}
+                        primaryBtn
+                        className="mt-2 mx-auto"
+                    // loading={isLoading}
+                    />
                 </div>
             )}
-            {status === 'permission-granted' && (
+            {status === 'permission-granted' && !redirectTo && (
                 <div>
-                    <p>Location permissions granted. You can now proceed.</p>
+                    <p className='ubuntu-light  '>Location permissions granted. You can now proceed.</p>
                 </div>
             )}
         </div>

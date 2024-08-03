@@ -15,7 +15,7 @@ import LocationPrompt from "./components/location";
 
 const App: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const [locationEnabled, setLocationEnabled] = useState(false);
+  const [locationEnabled, setLocationEnabled] = useState(true);
 
   // Check if location services are enabled
   const checkLocation = () => {
