@@ -156,3 +156,15 @@ export const formatTime = (ms: any) => {
   }, 3000);
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
+
+export const checkLocationServices = (callback: (enabled: boolean) => void) => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      () => callback(true),  // Location enabled
+      () => callback(false)  // Location disabled or unavailable
+    );
+  } else {
+    callback(false); // Geolocation not supported
+  }
+};
+

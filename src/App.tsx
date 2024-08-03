@@ -1,41 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/themes/commonstyle.css";
+import LocationPrompt from "./components/location";
 import NavBar from "./components/navBar";
+import { checkLocationServices } from "./helpers"; // Ensure this is implemented and imported correctly
 import AddNewUser from "./pages/AddNewUser";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Profile from "./pages/profile";
 import Tracker from "./pages/tracker";
 import { RootState } from './redux/store';
-import LocationPrompt from "./components/location";
 
 const App: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const [locationEnabled, setLocationEnabled] = useState(true);
-
-  // Check if location services are enabled
-  const checkLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        () => setLocationEnabled(true),
-        () => setLocationEnabled(false)
-      );
-    } else {
-      setLocationEnabled(false);
-    }
-  };
+  const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
 
   useEffect(() => {
-    checkLocation();
+    checkLocationServices((enabled) => {
+      setLocationEnabled(enabled);
+    });
   }, []);
 
   const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
     if (!isAuthenticated) {
-      return <Navigate to="/login" />; // Redirect to login if not authenticated
+      return <Navigate to="/login" />;
+    }
+    return <>{element}</>;
+  };
+
+  const LocationBasedRoute = ({ element }: { element: React.ReactNode }) => {
+    if (locationEnabled === null) {
+      return <div>Loading...</div>; // Optionally show a loading state
+    }
+    if (locationEnabled === false) {
+      return <Navigate to="/location-prompt" />;
     }
     return <>{element}</>;
   };
@@ -53,16 +54,10 @@ const App: React.FC = () => {
               <>
                 <NavBar />
                 <Routes>
-                  <Route path="/home" element={
-                    locationEnabled ? <Home /> : <Navigate to="/location-prompt" />
-                  } /> {/* Redirect to location prompt if location is not enabled */}
-                  <Route path="/tracker" element={
-                    locationEnabled ? <Tracker /> : <Navigate to="/location-prompt" />
-                  } /> {/* Redirect to location prompt if location is not enabled */}
-                  <Route path="/profile" element={
-                    locationEnabled ? <Profile /> : <Navigate to="/location-prompt" />
-                  } /> {/* Redirect to location prompt if location is not enabled */}
-                  <Route path="/location-prompt" element={<LocationPrompt onEnableLocation={checkLocation} />} /> {/* Location prompt route */}
+                  <Route path="/home" element={<LocationBasedRoute element={<Home />} />} />
+                  <Route path="/tracker" element={<LocationBasedRoute element={<Tracker />} />} />
+                  <Route path="/profile" element={<LocationBasedRoute element={<Profile />} />} />
+                  <Route path="/location-prompt" element={<LocationPrompt onEnableLocation={() => checkLocationServices(setLocationEnabled)} />} />
                 </Routes>
               </>
             }

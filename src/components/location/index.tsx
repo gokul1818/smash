@@ -6,14 +6,17 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
     const [status, setStatus] = useState<'idle' | 'error' | 'permission-granted'>('idle');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [redirectTo, setRedirectTo] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleEnableLocation = () => {
+        setLoading(true)
         if (navigator.geolocation) {
             setStatus('idle');
             navigator.geolocation.getCurrentPosition(
                 () => {
                     setStatus('permission-granted');
                     onEnableLocation();
+                    setLoading(false)
                     setRedirectTo('/home'); // Set the redirect path here
                 },
                 (error) => {
@@ -33,7 +36,10 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                     }
                 }
             );
+            setLoading(false)
+
         } else {
+            setLoading(false)
             setStatus('error');
             setErrorMessage("Geolocation is not supported by this browser.");
         }
@@ -63,7 +69,7 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                         onClick={() => handleEnableLocation()}
                         primaryBtn
                         className="mt-2 mx-auto"
-                    // loading={isLoading}
+                        loading={loading}
                     />
                 </div>
             )}
@@ -75,7 +81,7 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                         onClick={() => handleEnableLocation()}
                         primaryBtn
                         className="mt-2 mx-auto"
-                    // loading={isLoading}
+                        loading={loading}
                     />
                 </div>
             )}
