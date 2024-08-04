@@ -4,6 +4,7 @@
   height: 100%;
   min-height: 100vh;
   align-items: center;
+  padding: 15px;
 
   background: linear-gradient(to bottom, #0e0e0e, #021531);
 }
@@ -18,7 +19,7 @@
   left:80px;
 }
 .add-new-user-admin {
-  width: 350px;
+  width: 300px;
   height: 220px;
   min-height: 230px;
   background: #ffffff;
