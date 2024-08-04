@@ -16,7 +16,7 @@ import { RootState } from './redux/store';
 
 const App: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
+  const [locationEnabled, setLocationEnabled] = useState<boolean>(true);
 
   useEffect(() => {
     checkLocationServices((enabled) => {
@@ -32,10 +32,10 @@ const App: React.FC = () => {
   };
 
   const LocationBasedRoute = ({ element }: { element: React.ReactNode }) => {
-    if (locationEnabled === null) {
-      return <div>Loading...</div>; // Optionally show a loading state
-    }
-    if (locationEnabled === false) {
+    // if (locationEnabled === null) {
+    //   return <div>Loading...</div>; // Optionally show a loading state
+    // }
+    if (locationEnabled === false || locationEnabled === null) {
       return <Navigate to="/location-prompt" />;
     }
     return <>{element}</>;
