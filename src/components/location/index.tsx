@@ -34,9 +34,10 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                         default:
                             setErrorMessage("An error occurred.");
                     }
+                    setLoading(false)
                 }
+
             );
-            setLoading(false)
 
         } else {
             setLoading(false)
