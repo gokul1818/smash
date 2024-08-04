@@ -15,6 +15,7 @@
 }
 
 .navbar-icon {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 5%;
+  object-fit: contain;
 }
