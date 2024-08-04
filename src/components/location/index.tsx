@@ -44,21 +44,7 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
             setLoading(false);
         }
     };
-    const getLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                },
-                (error) => {
-                    console.log("df", error)
-                },
-                { timeout: 10000 } // Optional: you can specify a timeout (in milliseconds)
-            );
-        } else {
-            alert("sdf")
-        }
-    };
+
     // Handle redirection if required
     useEffect(() => {
         if (status === 'permission-granted' && redirectTo) {
@@ -91,7 +77,7 @@ const LocationPrompt: React.FC<{ onEnableLocation: () => void }> = ({ onEnableLo
                     <p className='ubuntu-light'>{errorMessage}</p>
                     <Button
                         label="Try Again"
-                        onClick={getLocation}
+                        onClick={handleEnableLocation}
                         primaryBtn
                         className="mt-2 mx-auto"
                         loading={loading}

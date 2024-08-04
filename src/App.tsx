@@ -32,9 +32,7 @@ const App: React.FC = () => {
   };
 
   const LocationBasedRoute = ({ element }: { element: React.ReactNode }) => {
-    // if (locationEnabled === null) {
-    //   return <div>Loading...</div>; // Optionally show a loading state
-    // }
+  
     if (locationEnabled === false || locationEnabled === null) {
       return <Navigate to="/location-prompt" />;
     }
