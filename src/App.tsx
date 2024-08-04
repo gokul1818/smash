@@ -48,6 +48,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/add-user" element={<AddNewUser />} />
         <Route path="/" element={<Login />} />
+        <Route path="/location-prompt" element={<LocationPrompt onEnableLocation={() => checkLocationServices(setLocationEnabled)} />} />
         <Route path="/*" element={
           <ProtectedRoute
             element={
@@ -57,7 +58,6 @@ const App: React.FC = () => {
                   <Route path="/home" element={<LocationBasedRoute element={<Home />} />} />
                   <Route path="/tracker" element={<LocationBasedRoute element={<Tracker />} />} />
                   <Route path="/profile" element={<LocationBasedRoute element={<Profile />} />} />
-                  <Route path="/location-prompt" element={<LocationPrompt onEnableLocation={() => checkLocationServices(setLocationEnabled)} />} />
                 </Routes>
               </>
             }
